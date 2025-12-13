@@ -1,0 +1,25 @@
+@extends('layouts.admin_lte')
+@section('title', 'Tambah Data Lulusan')
+
+@section('content')
+    {{-- Grid Responsif: Card berada di tengah dan berukuran optimal --}}
+    <div class="flex justify-center">
+        <div class="w-full max-w-5xl"> 
+            
+            {{-- Card Utama (Menambahkan efek hover) --}}
+            <div class="bg-white rounded-xl shadow-lg border-t-4 border-indigo-600 hover:shadow-2xl transition duration-300 ease-in-out"> 
+                
+                {{-- Card Header --}}
+                <div class="p-5 border-b border-slate-100"> {{-- Mengganti border-gray-100 menjadi border-slate-100 --}}
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center"> {{-- Mengganti text-gray-800 menjadi text-slate-800 --}}
+                        <i class="fas fa-user-plus mr-2 text-indigo-600"></i> Form Tambah Lulusan
+                    </h3>
+                </div>
+                
+                {{-- CARD BODY & FOOTER akan di-include dari partial form --}}
+                @include('lulusan.form', ['lulusan' => null])
+                
+            </div>
+        </div>
+    </div>
+@endsection

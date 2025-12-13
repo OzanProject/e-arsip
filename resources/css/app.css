@@ -1,0 +1,104 @@
+/*
+|---------------------------------------------------------------------------
+| Tailwind CSS Directives
+|---------------------------------------------------------------------------
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/*
+|---------------------------------------------------------------------------
+| 1. Global Styles & Reset (Memastikan x-cloak Alpine.js bekerja)
+|---------------------------------------------------------------------------
+*/
+
+/* Alpine.js x-cloak fix (PENTING untuk mencegah flicker saat reload) */
+[x-cloak] { 
+    display: none !important; 
+}
+
+/* Memastikan font Inter diterapkan di semua elemen */
+body {
+    font-family: 'Inter', sans-serif !important;
+}
+
+/*
+|---------------------------------------------------------------------------
+| 2. Custom Components (Reusable Tailwind @apply)
+|---------------------------------------------------------------------------
+*/
+
+@layer components {
+    /* --- Tombol Utama (Primary, Secondary, Icon Actions) --- */
+
+    /* Tombol Utama (Primary - INDIGO) */
+    .btn-primary {
+        @apply px-5 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out text-sm;
+    }
+
+    /* Tombol Sekunder (Neutral) */
+    .btn-secondary {
+        @apply px-5 py-2 bg-white text-slate-700 font-semibold rounded-lg shadow-md border border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 transition duration-150 ease-in-out text-sm;
+    }
+
+    /* Tombol Icon Kecil (Digunakan di kolom Aksi Tabel) */
+    .btn-icon-info { 
+        @apply p-2 text-indigo-500 rounded-full hover:bg-indigo-50 transition duration-150; 
+    }
+    .btn-icon-warning { 
+        @apply p-2 text-amber-500 rounded-full hover:bg-amber-50 transition duration-150; 
+    }
+    .btn-icon-danger { 
+        @apply p-2 text-red-500 rounded-full hover:bg-red-100 transition duration-150; 
+    }
+    .btn-success-small { 
+        @apply px-3 py-1 bg-emerald-600 text-white font-semibold rounded-lg shadow-sm text-xs hover:bg-emerald-700 transition duration-150; 
+    }
+    .btn-danger-small { 
+        @apply px-3 py-1 bg-red-600 text-white font-semibold rounded-lg shadow-sm text-xs hover:bg-red-700 transition duration-150; 
+    }
+
+    /* --- Form Input Styles (Konsisten di semua form) --- */
+    
+    /* Styling dasar untuk input, textarea, dan select */
+    .form-input, .form-select, .form-textarea {
+        @apply w-full px-3 py-2 text-base rounded-lg border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-150;
+    }
+}
+
+
+/*
+|---------------------------------------------------------------------------
+| 3. Final Overrides & Utility Styles
+|---------------------------------------------------------------------------
+*/
+
+/* Global Table Overrides (Memastikan tabel selalu terlihat profesional) */
+.table th {
+    /* Mengganti warna th lama menjadi slate */
+    @apply font-semibold text-xs uppercase tracking-wider text-slate-500 bg-slate-50; 
+}
+
+/* Efek Hover Pada Baris Tabel (Lebih lembut dari warna solid) */
+.table tbody tr:hover {
+    background-color: #f1f5f9 !important; /* Latar belakang slate-100 yang lembut */
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Styling untuk badge dinamis di sidebar (jika ada) */
+.badge-info-sidebar {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800;
+}
+
+/* Mengatasi masalah tombol reset pencarian (Clear button) */
+.text-red-500.ml-2.p-2 {
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.text-red-500.ml-2.p-2:hover {
+    color: #c23a3a;
+}
