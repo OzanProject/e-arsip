@@ -20,16 +20,18 @@ class UserSeeder extends Seeder
             'email' => 'ardiansyahdzan@gmail.com', // Ganti dengan email Anda
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('password'), // Password: password
+            'is_approved' => true, // Auto-approve seeded admin
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
-        
+
         // Data akun operator
         DB::table('users')->insert([
             'name' => 'Operator Arsip',
             'email' => 'operator@earsip.com',
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('operator123'),
+            'is_approved' => true, // Auto-approve seeded operator
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
