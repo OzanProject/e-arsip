@@ -123,18 +123,20 @@
                 </h5>
                 <ul class="divide-y divide-slate-100">
                     @forelse ($ptkTerbaru as $ptk)
-                        {{-- FIX PTK LINK: Menggunakan $ptk (Model) untuk UUID Binding --}}
-                        <a href="{{ route('landing.ptk.show', $ptk) }}" class="block">
-                            <li class="py-3 flex justify-between items-center transition duration-150 hover:bg-slate-50 -mx-4 px-4 rounded-lg group">
-                                <div>
-                                    <p class="font-semibold text-slate-900 leading-snug group-hover:text-emerald-600">{{ Str::limit($ptk->nama, 25) }}</p>
-                                    <small class="text-slate-500">{{ $ptk->jabatan }}</small>
-                                </div>
-                                <span class="px-3 py-1 text-xs font-bold tracking-wider bg-emerald-100 text-emerald-700 rounded-full flex-shrink-0">
-                                    {{ $ptk->status_pegawai }}
-                                </span>
-                            </li>
-                        </a>
+                        {{-- FIX: Pastikan UUID tersedia karena model menggunakan UUID untuk routing --}}
+                        @if(!empty($ptk->uuid))
+                            <a href="{{ route('landing.ptk.show', $ptk) }}" class="block">
+                                <li class="py-3 flex justify-between items-center transition duration-150 hover:bg-slate-50 -mx-4 px-4 rounded-lg group">
+                                    <div>
+                                        <p class="font-semibold text-slate-900 leading-snug group-hover:text-emerald-600">{{ Str::limit($ptk->nama, 25) }}</p>
+                                        <small class="text-slate-500">{{ $ptk->jabatan }}</small>
+                                    </div>
+                                    <span class="px-3 py-1 text-xs font-bold tracking-wider bg-emerald-100 text-emerald-700 rounded-full flex-shrink-0">
+                                        {{ $ptk->status_pegawai }}
+                                    </span>
+                                </li>
+                            </a>
+                        @endif
                     @empty
                         <li class="py-3 text-center text-slate-500 italic">Data PTK tidak tersedia.</li>
                     @endforelse
