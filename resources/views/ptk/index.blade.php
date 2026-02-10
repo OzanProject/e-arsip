@@ -18,6 +18,32 @@
         </div>
     </div>
 
+    {{-- Check for Missing UUIDs --}}
+    @if($ptk->contains(fn($p) => empty($p->uuid)))
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm" data-aos="fade-down">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700 font-bold">
+                            Terdeteksi Data PTK tanpa UUID!
+                        </p>
+                        <p class="text-sm text-red-600">
+                            Data lama perlu diperbarui agar fitur Edit/Hapus berfungsi normal.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <a href="{{ url('/fix-ptk-uuids') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-sm transition-all">
+                        <i class="fas fa-tools mr-2"></i> Perbaiki Data Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- Main Card --}}
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-indigo-600" data-aos="fade-up" data-aos-delay="100">
         
