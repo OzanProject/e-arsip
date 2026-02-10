@@ -17,6 +17,8 @@ use App\Http\Controllers\BukuIndukArsipController;
 use App\Http\Controllers\AdministrasiGuruController;
 use App\Http\Controllers\AdministrasiSiswaController;
 use App\Http\Controllers\SchoolClassController;
+use Illuminate\Support\Str;
+use App\Models\Ptk;
 
 
 // =======================================================
@@ -41,6 +43,19 @@ Route::get('/arsip/1', function () {
     }
     return redirect()->route('landing.arsip.show', 1);
 });
+
+// === TEMPORARY FIX ROUTE ===
+Route::get('/fix-ptk-uuids', function () {
+    $count = 0;
+    Ptk::whereNull('uuid')->orWhere('uuid', '')->chunk(100, function ($ptks) use (&$count) {
+        foreach ($ptks as $ptk) {
+            $ptk->uuid = (string) Str::uuid();
+            $ptk->save();
+            $count++;
+        }
+    });
+    return "Berhasil memperbaiki $count data PTK yang tidak memiliki UUID. Silakan kembali ke halaman Data PTK.";
+})->middleware('auth');
 
 
 // =======================================================
