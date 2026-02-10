@@ -40,7 +40,8 @@
                         class="form-select w-full @error('kelas') border-red-500 @enderror" required>
                     <option value="">-- Pilih Kelas --</option>
                     @php 
-                        $kelasList = ['7A', '7B', '8A', '8B', '9A', '9B'];
+                        // Gunakan variabel $classes dari controller, atau fallback ke array kosong jika tidak ada (untuk keamanan)
+                        $kelasList = $classes ?? ['7A', '7B', '8A', '8B', '9A', '9B'];
                         $selectedKelas = old('kelas', $siswa->kelas ?? '');
                     @endphp
                     @foreach ($kelasList as $k)

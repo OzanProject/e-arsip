@@ -16,6 +16,7 @@ use App\Http\Controllers\AbsensiKelasController;
 use App\Http\Controllers\BukuIndukArsipController;
 use App\Http\Controllers\AdministrasiGuruController;
 use App\Http\Controllers\AdministrasiSiswaController;
+use App\Http\Controllers\SchoolClassController;
 
 
 // =======================================================
@@ -47,9 +48,9 @@ Route::get('/arsip/1', function () {
 // =======================================================
 
 Route::middleware('auth')->group(function () {
-    
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Profil User
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -77,6 +78,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('siswa/bulk-destroy', [SiswaController::class, 'bulkDestroy'])->name('siswa.bulk.destroy');
     Route::resource('siswa', SiswaController::class);
 
+    // Modul 4b: Manajemen Kelas
+    Route::resource('school-classes', SchoolClassController::class);
+
     // Modul 5: Data PTK (ADMIN PATH)
     Route::resource('data-ptk', PtkController::class)
         ->names('ptk')
@@ -93,7 +97,7 @@ Route::middleware('auth')->group(function () {
     Route::get('daftar-hadir/generate', [AbsensiKelasController::class, 'generatePdf'])->name('daftar-hadir.generate');
 
     // Modul 9: Database Sarpras
-    Route::resource('sarpras', SarprasController::class); 
+    Route::resource('sarpras', SarprasController::class);
 
     // Modul 10: Database Perpus
     Route::resource('buku-perpus', BukuPerpusController::class);
@@ -103,10 +107,10 @@ Route::middleware('auth')->group(function () {
 
     // Modul 11 & Pengaturan Umum (Membutuhkan Hak Akses Admin)
     Route::middleware('admin')->group(function () {
-        
+
         // Modul 11: Manajemen User
         Route::patch('/users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
-        Route::resource('users', UserController::class); 
+        Route::resource('users', UserController::class);
 
         // Modul Pengaturan Umum (Singleton Edit/Update)
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
@@ -122,18 +126,18 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
 
 // GLOBAL SEARCH (Untuk Hero Section)
-Route::get('/cari', [LandingPageController::class, 'globalSearch'])->name('landing.search'); 
+Route::get('/cari', [LandingPageController::class, 'globalSearch'])->name('landing.search');
 
 // DAFTAR PUBLIK INDEX
 Route::get('/arsip-list', [LandingPageController::class, 'indexArsip'])->name('landing.arsip.index');
 Route::get('/siswa-list', [LandingPageController::class, 'indexSiswa'])->name('landing.siswa.index');
-Route::get('/ptk-list', [LandingPageController::class, 'indexPtk'])->name('landing.ptk.index'); 
-Route::get('/katalog-unduhan', [LandingPageController::class, 'indexDownloads'])->name('landing.arsip.download_index'); 
+Route::get('/ptk-list', [LandingPageController::class, 'indexPtk'])->name('landing.ptk.index');
+Route::get('/katalog-unduhan', [LandingPageController::class, 'indexDownloads'])->name('landing.arsip.download_index');
 
 // DETAIL PUBLIK 
 // PTK DETAIL: Menggunakan Model Binding (UUID/Slug)
-Route::get('/ptk/{ptk}', [LandingPageController::class, 'showPtk'])->name('landing.ptk.show'); 
+Route::get('/ptk/{ptk}', [LandingPageController::class, 'showPtk'])->name('landing.ptk.show');
 // ARSIP DETAIL: Menggunakan identifier (ID atau UUID)
-Route::get('/arsip-detail/{identifier}', [LandingPageController::class, 'showArsip'])->name('landing.arsip.show'); 
+Route::get('/arsip-detail/{identifier}', [LandingPageController::class, 'showArsip'])->name('landing.arsip.show');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

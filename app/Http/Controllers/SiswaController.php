@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
+use App\Models\SchoolClass;
 use App\Exports\SiswaExport;
 use App\Imports\SiswaImport;
 use Illuminate\Http\Request;
@@ -28,30 +29,38 @@ class SiswaController extends Controller
                 ->orWhere('nis', 'like', "%{$search}%")
                 ->orWhere('nama', 'like', "%{$search}%");
         }
-        
+
         // Default: Urutan Kelas (7, 8, 9) lalu Nama
-        $sortBy = $request->input('sort_by', 'kelas'); 
+        $sortBy = $request->input('sort_by', 'kelas');
         $sortOrder = $request->input('sort_order', 'asc');
-        
+
         // Custom Sorting Logic
         if ($sortBy === 'kelas') {
             // Urutkan berdasarkan angka awal kelas (7, 8, 9) agar 7A, 8A, 9A urut
             // Kemudian berdasarkan huruf kelas, lalu nama
-             $siswa = $query->orderByRaw('CAST(SUBSTR(kelas, 1, 1) AS UNSIGNED) ASC')
-                           ->orderBy('kelas', 'asc')
-                           ->orderBy('nama', 'asc')
-                           ->paginate(10);
+            $siswa = $query->orderByRaw('CAST(SUBSTR(kelas, 1, 1) AS UNSIGNED) ASC')
+                ->orderBy('kelas', 'asc')
+                ->orderBy('nama', 'asc')
+                ->paginate(10);
         } else {
-             // Jika sorting custom lain (misal nama, nisn)
-             $siswa = $query->orderBy($sortBy, $sortOrder)->paginate(10);
+            // Jika sorting custom lain (misal nama, nisn)
+            $siswa = $query->orderBy($sortBy, $sortOrder)->paginate(10);
         }
-        
+
         return view('siswa.index', compact('siswa', 'sortBy', 'sortOrder'));
     }
 
     public function create()
     {
-        return view('siswa.create');
+        // Ambil daftar kelas dari database (jika ada), jika kosong gunakan default
+        $classes = SchoolClass::orderBy('name')->pluck('name')->toArray();
+
+        // Fallback jika tabel kelas masih kosong
+        if (empty($classes)) {
+            $classes = ['7A', '7B', '8A', '8B', '9A', '9B'];
+        }
+
+        return view('siswa.create', compact('classes'));
     }
 
     public function store(Request $request)
@@ -74,7 +83,7 @@ class SiswaController extends Controller
         Siswa::create($validated);
 
         return redirect()->route('siswa.index')
-                         ->with('success', 'Data siswa aktif berhasil ditambahkan.');
+            ->with('success', 'Data siswa aktif berhasil ditambahkan.');
     }
 
     public function show(Siswa $siswa)
@@ -84,7 +93,11 @@ class SiswaController extends Controller
 
     public function edit(Siswa $siswa)
     {
-        return view('siswa.edit', compact('siswa'));
+        $classes = SchoolClass::orderBy('name')->pluck('name')->toArray();
+        if (empty($classes)) {
+            $classes = ['7A', '7B', '8A', '8B', '9A', '9B'];
+        }
+        return view('siswa.edit', compact('siswa', 'classes'));
     }
 
     public function update(Request $request, Siswa $siswa)
@@ -108,7 +121,7 @@ class SiswaController extends Controller
         $siswa->update($validated);
 
         return redirect()->route('siswa.index')
-                         ->with('success', 'Data siswa aktif berhasil diperbarui.');
+            ->with('success', 'Data siswa aktif berhasil diperbarui.');
     }
 
     public function destroy(Siswa $siswa)
@@ -116,7 +129,7 @@ class SiswaController extends Controller
         $siswa->delete();
 
         return redirect()->route('siswa.index')
-                         ->with('success', 'Data siswa aktif berhasil dihapus.');
+            ->with('success', 'Data siswa aktif berhasil dihapus.');
     }
 
     public function bulkDestroy(Request $request)
@@ -151,8 +164,7 @@ class SiswaController extends Controller
             $failures = $e->failures();
             $errorMessage = 'Gagal validasi: ' . count($failures) . ' baris error. Cek data Anda.';
             return redirect()->route('siswa.index')->with('error', $errorMessage);
-        } 
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Impor Siswa Gagal (Fatal): ' . $e->getMessage() . ' on line ' . $e->getLine());
             if (str_contains($e->getMessage(), 'Invalid datetime format')) {
                 return redirect()->route('siswa.index')->with('error', 'Gagal memasukkan data tanggal. Pastikan kolom Tanggal Lahir di Excel diformat sebagai **Tanggal** (numerik) dan diimpor ulang.');

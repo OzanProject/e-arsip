@@ -99,6 +99,7 @@
                 {{-- MODUL KEPENDIDIKAN (Tanpa Nomor) --}}
                 @php $modules = [
                     ['route' => 'lulusan.index', 'icon' => 'fas fa-graduation-cap', 'title' => 'Data Lulusan'],
+                    ['route' => 'school-classes.index', 'icon' => 'fas fa-chalkboard', 'title' => 'Manajemen Kelas'],
                     ['route' => 'siswa.index', 'icon' => 'fas fa-user-graduate', 'title' => 'Data Siswa Aktif'],
                     ['route' => 'ptk.index', 'icon' => 'fas fa-chalkboard-teacher', 'title' => 'Data PTK'],
                     ['route' => 'administrasi-guru.index', 'icon' => 'fas fa-file-alt', 'title' => 'Administrasi Guru'],
