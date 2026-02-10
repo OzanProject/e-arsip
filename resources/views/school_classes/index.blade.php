@@ -2,6 +2,10 @@
 
 @section('title', 'Manajemen Data Kelas')
 
+{{--
+@var \Illuminate\Pagination\LengthAwarePaginator|\App\Models\SchoolClass[] $schoolClasses
+--}}
+
 @section('content')
   <div class="space-y-6">
     <div class="bg-white rounded-xl shadow-lg border-t-4 border-indigo-600">
@@ -29,10 +33,10 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-slate-100">
-            @forelse ($classes as $index => $class)
+            @forelse ($schoolClasses as $index => $class)
               <tr class="hover:bg-slate-50 transition duration-150">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-medium">
-                  {{ $classes->firstItem() + $index }}
+                  {{ $schoolClasses->firstItem() + $index }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="px-3 py-1 rounded-full text-sm font-bold bg-indigo-100 text-indigo-700">
@@ -86,9 +90,9 @@
       </div>
 
       {{-- Footer / Pagination --}}
-      @if($classes->hasPages())
+      @if($schoolClasses->hasPages())
         <div class="px-6 py-4 border-t border-slate-200">
-          {{ $classes->links('pagination::tailwind') }}
+          {{ $schoolClasses->links('pagination::tailwind') }}
         </div>
       @endif
     </div>
