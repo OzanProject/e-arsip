@@ -11,24 +11,26 @@
                         <i class="fas fa-edit mr-2 text-amber-500"></i> Form Edit Kelas
                     </h3>
                 </div>
-                
+
                 <form action="{{ route('school-classes.update', $schoolClass->id) }}" method="POST" class="p-6 space-y-5">
                     @csrf
                     @method('PUT')
-                    
+
                     {{-- Nama Kelas --}}
                     <div>
-                        <label for="name" class="block text-sm font-bold text-slate-700 mb-1">Nama Kelas <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" id="name" 
-                               class="form-input w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 @error('name') border-red-500 @enderror" 
-                               value="{{ old('name', $schoolClass->name) }}" required>
+                        <label for="name" class="block text-sm font-bold text-slate-700 mb-1">Nama Kelas <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" name="name" id="name"
+                            class="form-input w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 @error('name') border-red-500 @enderror"
+                            value="{{ old('name', $schoolClass->name) }}" required>
                         @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     {{-- Wali Kelas --}}
                     <div>
                         <label for="wali_kelas_id" class="block text-sm font-bold text-slate-700 mb-1">Wali Kelas</label>
-                        <select name="wali_kelas_id" id="wali_kelas_id" class="form-select w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500">
+                        <select name="wali_kelas_id" id="wali_kelas_id"
+                            class="form-select w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">-- Pilih Wali Kelas (Opsional) --</option>
                             @foreach ($waliKelasList as $guru)
                                 <option value="{{ $guru->id }}" {{ old('wali_kelas_id', $schoolClass->wali_kelas_id) == $guru->id ? 'selected' : '' }}>
@@ -41,17 +43,19 @@
 
                     {{-- Angkatan / Tahun Ajaran --}}
                     <div>
-                        <label for="angkatan" class="block text-sm font-bold text-slate-700 mb-1">Angkatan / Tahun Ajaran</label>
-                        <input type="text" name="angkatan" id="angkatan" 
-                               class="form-input w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" 
-                               value="{{ old('angkatan', $schoolClass->angkatan) }}">
+                        <label for="angkatan" class="block text-sm font-bold text-slate-700 mb-1">Angkatan / Tahun
+                            Ajaran</label>
+                        <input type="text" name="angkatan" id="angkatan"
+                            class="form-input w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500"
+                            value="{{ old('angkatan', $schoolClass->angkatan) }}">
                         @error('angkatan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="pt-4 flex justify-end space-x-3 border-t border-slate-100 mt-6">
                         <a href="{{ route('school-classes.index') }}" class="btn-secondary text-sm">Batal</a>
-                        <button type="submit" class="btn-warning text-sm shadow-md hover:shadow-lg transform transition hover:-translate-y-0.5 text-white">
-                            <i class="fas fa-save mr-1"></i> Update Kelas
+                        <button type="submit"
+                            class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+                            <i class="fas fa-save mr-2"></i> Update Kelas
                         </button>
                     </div>
                 </form>
