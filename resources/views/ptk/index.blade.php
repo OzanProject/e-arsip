@@ -112,21 +112,23 @@
                             
                             {{-- AKSI --}}
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                <div class="flex justify-center items-center gap-2">
-                                    <a href="{{ route('ptk.show', $data) }}" class="p-2 text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('ptk.edit', $data) }}" class="p-2 text-amber-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <form action="{{ route('ptk.destroy', $data) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                    @if($data->uuid)
+                                        <a href="{{ route('ptk.show', $data) }}" class="p-2 text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('ptk.edit', $data) }}" class="p-2 text-amber-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all" title="Edit">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <form action="{{ route('ptk.destroy', $data) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-xs text-red-500 italic">Error: Missing UUID</span>
+                                    @endif
                             </td>
                         </tr>
                     @empty
