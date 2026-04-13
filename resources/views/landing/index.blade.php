@@ -153,7 +153,14 @@
                         <li class="py-3 transition duration-150 hover:bg-slate-50 -mx-4 px-4 rounded-lg">
                             <p class="text-slate-900 font-semibold leading-snug">{{ $siswa->nama }}</p>
                             {{-- Hanya tampilkan Kelas dan JK (Data non-sensitif) --}}
-                            <small class="text-slate-500">Kelas: **{{ $siswa->kelas }}** | JK: {{ $siswa->jenis_kelamin }}</small>
+                            <small class="text-slate-500">
+                                Kelas: **{{ $siswa->kelas }}** | JK: 
+                                @if($siswa->jenis_kelamin == 'Laki-laki')
+                                    <span class="text-blue-600 font-medium"><i class="fas fa-mars mr-1 text-[10px]"></i> Laki-laki</span>
+                                @else
+                                    <span class="text-rose-600 font-medium"><i class="fas fa-venus mr-1 text-[10px]"></i> Perempuan</span>
+                                @endif
+                            </small>
                         </li>
                     @empty
                         <li class="py-3 text-center text-slate-500 italic">Data Siswa tidak tersedia.</li>

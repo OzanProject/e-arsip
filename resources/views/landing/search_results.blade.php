@@ -121,7 +121,12 @@
                                 <div>
                                     <p class="font-semibold text-lg text-slate-900">{{ $siswa->nama }}</p>
                                     <small class="text-slate-500">
-                                        Kelas: <span class="font-medium text-yellow-700">{{ $siswa->kelas }}</span> | JK: {{ $siswa->jenis_kelamin }}
+                                        Kelas: <span class="font-medium text-yellow-700">{{ $siswa->kelas }}</span> | JK: 
+                                        @if($siswa->jenis_kelamin == 'Laki-laki')
+                                            <span class="text-blue-600 font-medium"><i class="fas fa-mars mr-1 text-xs"></i> Laki-laki</span>
+                                        @else
+                                            <span class="text-rose-600 font-medium"><i class="fas fa-venus mr-1 text-xs"></i> Perempuan</span>
+                                        @endif
                                     </small>
                                 </div>
                                 <span class="text-sm text-yellow-600 flex-shrink-0">

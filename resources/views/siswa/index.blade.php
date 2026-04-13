@@ -5,6 +5,8 @@
 @section('content')
     {{-- @var array $classList --}}
     
+    <div x-data="{ openImportModal: false, selectedIds: [] }" class="space-y-6">
+
     {{-- MODAL UNTUK IMPOR EXCEL --}}
     {{-- Page Header --}}
     <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
@@ -46,7 +48,7 @@
         </div>
     </div>
 
-    <div x-data="{ openImportModal: false, selectedIds: [] }" class="space-y-6">
+
 
         {{-- Struktur Modal Tailwind --}}
         <div x-show="openImportModal" x-cloak 
@@ -244,15 +246,17 @@
                                         </span>
                                     </td>
 
-                                    {{-- Jenis Kelamin Badge --}}
-                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-slate-700">
-                                        @php
-                                            // Laki-laki: Blue, Perempuan: Pink
-                                            $color = $data->jenis_kelamin == 'Laki-laki' ? 'blue' : 'pink';
-                                        @endphp
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-{{ $color }}-100 text-{{ $color }}-800">
-                                            {{ $data->jenis_kelamin }}
-                                        </span>
+                                    {{-- Jenis Kelamin Badge (Premium) --}}
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm">
+                                        @if($data->jenis_kelamin == 'Laki-laki')
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                                <i class="fas fa-mars mr-1.5 text-blue-500"></i> Laki-laki
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                                <i class="fas fa-venus mr-1.5 text-rose-500"></i> Perempuan
+                                            </span>
+                                        @endif
                                     </td>
                                     
                                     {{-- Kolom Aksi (Tombol Ikon Minimalis) --}}

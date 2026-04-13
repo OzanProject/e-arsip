@@ -68,7 +68,11 @@
                         </div>
                     </div>
                     <div class="mt-3 pt-3 border-t border-slate-100 text-sm flex justify-between">
-                        <span class="text-slate-500"><i class="fas fa-venus-mars mr-1"></i> {{ $siswa->jenis_kelamin }}</span>
+                        @if($siswa->jenis_kelamin == 'Laki-laki')
+                            <span class="text-blue-600 font-medium"><i class="fas fa-mars mr-1"></i> Laki-laki</span>
+                        @else
+                            <span class="text-rose-600 font-medium"><i class="fas fa-venus mr-1"></i> Perempuan</span>
+                        @endif
                         <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">Aktif</span>
                     </div>
                 </div>

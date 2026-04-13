@@ -3,8 +3,7 @@
 @section('title', 'Manajemen Pengguna')
 
 @section('content')
-<div class="space-y-6">
-
+<div x-data="{ selectedIds: [] }" class="space-y-6">
     {{-- Page Header --}}
     <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div class="space-y-1">

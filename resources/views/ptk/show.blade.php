@@ -43,7 +43,17 @@
                             {{-- Jenis Kelamin & Tgl Lahir --}}
                             <div class="py-3 px-4 sm:grid sm:grid-cols-6 sm:gap-4 sm:px-6 bg-slate-50">
                                 <dt class="text-sm font-medium text-slate-500 sm:col-span-1">Jenis Kelamin</dt>
-                                <dd class="mt-1 text-sm text-slate-900 sm:col-span-2 sm:mt-0">{{ $ptk->jenis_kelamin }}</dd>
+                                <dd class="mt-1 text-sm text-slate-900 sm:col-span-2 sm:mt-0">
+                                    @if($ptk->jenis_kelamin == 'Laki-laki')
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                            <i class="fas fa-mars mr-1.5 text-blue-500"></i> Laki-laki
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                            <i class="fas fa-venus mr-1.5 text-rose-500"></i> Perempuan
+                                        </span>
+                                    @endif
+                                </dd>
                                 
                                 <dt class="text-sm font-medium text-slate-500 sm:col-span-1">Tgl. Lahir</dt>
                                 <dd class="mt-1 text-sm text-slate-900 sm:col-span-2 sm:mt-0">{{ $ptk->tempat_lahir }}, {{ \Carbon\Carbon::parse($ptk->tanggal_lahir)->format('d F Y') }}</dd>
@@ -83,20 +93,23 @@
                             
                             {{-- Status Pegawai --}}
                             <div class="py-3 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-slate-500">Status Pegawai</dt>
-                                <dd class="mt-1 text-sm text-slate-900 sm:col-span-2 sm:mt-0">
-                                    @php
-                                        $color = match ($ptk->status_pegawai) {
-                                            'PNS' => 'indigo',
-                                            'PPPK' => 'sky',
-                                            'Honorer' => 'amber',
-                                            default => 'slate',
-                                        };
-                                    @endphp
-                                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold bg-{{ $color }}-100 text-{{ $color }}-800">
-                                        {{ $ptk->status_pegawai }}
-                                    </span>
-                                </dd>
+                                    <dt class="text-sm font-medium text-slate-500">Status Pegawai</dt>
+                                    <dd class="mt-1 text-sm text-slate-900 sm:col-span-2 sm:mt-0">
+                                        @php
+                                            $status = $ptk->status_pegawai;
+                                            $statusClasses = match ($status) {
+                                                'PNS' => 'bg-indigo-50 text-indigo-700 border-indigo-200',
+                                                'PPPK' => 'bg-sky-50 text-sky-700 border-sky-200',
+                                                'Honorer' => 'bg-amber-50 text-amber-700 border-amber-200',
+                                                'GTY' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                                                'GTT' => 'bg-rose-50 text-rose-700 border-rose-200',
+                                                default => 'bg-slate-50 text-slate-700 border-slate-200',
+                                            };
+                                        @endphp
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border {{ $statusClasses }}">
+                                            {{ $status }}
+                                        </span>
+                                    </dd>
                             </div>
                         </dl>
                     </section>

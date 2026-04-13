@@ -3,6 +3,7 @@
 @section('title', 'Daftar Administrasi Siswa')
 
 @section('content')
+    <div x-data="{ openImportModal: false, selectedIds: [] }" class="space-y-6">
     {{-- Page Header --}}
     <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div class="space-y-1">
@@ -16,7 +17,7 @@
         </div>
     </div>
 
-    <div class="space-y-6">
+
         
         {{-- Card Utama --}}
         <div class="bg-white rounded-xl shadow-lg border-t-4 border-indigo-600">
@@ -49,11 +50,6 @@
                             @endif
                         </div>
                     </form>
-                    
-                    {{-- 2. Tombol Tambah Arsip --}}
-                    <a href="{{ route('administrasi-siswa.create') }}" class="btn-primary w-full sm:w-auto text-sm">
-                        <i class="fas fa-plus mr-1"></i> Tambah Arsip
-                    </a>
                 </div>
             </div> {{-- Akhir Card Header --}}
             

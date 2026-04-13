@@ -49,11 +49,6 @@
                             @endif
                         </div>
                     </form>
-                    
-                    {{-- 2. Tombol Tambah Buku --}}
-                    <a href="{{ route('buku-perpus.create') }}" class="btn-primary-teal w-full sm:w-auto text-sm">
-                        <i class="fas fa-plus mr-1"></i> Tambah Buku
-                    </a>
                 </div>
             </div> {{-- Akhir Card Header --}}
             

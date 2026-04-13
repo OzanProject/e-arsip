@@ -3,6 +3,7 @@
 @section('title', 'Daftar Lulusan')
 
 @section('content')
+    <div x-data="{ openImportModal: false, selectedIds: [] }" class="space-y-6 px-1">
     {{-- Page Header --}}
     <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div class="space-y-1">
@@ -33,8 +34,7 @@
         </div>
     </div>
 
-    {{-- Membungkus seluruh konten dengan x-data Alpine.js untuk state management --}}
-    <div x-data="{ openImportModal: false, selectedIds: [] }" class="space-y-6">
+
 
         {{-- MODAL UNTUK IMPOR EXCEL (KODE LENGKAP) --}}
         <div x-show="openImportModal" x-cloak 
@@ -108,7 +108,7 @@
                         </button>
                     </div>
 
-                    {{-- 2. Form Pencarian & Tombol Biasa (MUNCUL JIKA TIDAK ADA BULK ACTION) --}}
+                    {{-- 2. Form Pencarian (MUNCUL JIKA TIDAK ADA BULK ACTION) --}}
                     <div x-show="selectedIds.length === 0" class="flex items-center space-x-3 w-full md:w-auto justify-end">
                         {{-- SEARCH BAR --}}
                         <form action="{{ route('lulusan.index') }}" method="GET" class="w-full sm:w-64">
@@ -117,39 +117,6 @@
                                 <i class="fas fa-search absolute left-3 text-slate-400"></i>
                             </div>
                         </form>
-
-                        {{-- Dropdown Aksi (Import/Export) --}}
-                        <div x-data="{ openAction: false }" class="relative">
-                             <button @click="openAction = !openAction" type="button" class="btn-secondary flex items-center text-sm" title="Aksi Data">
-                                <i class="fas fa-file-export mr-2"></i> Aksi Data
-                                <i class="fas fa-angle-down ml-2 text-xs"></i>
-                             </button>
-                             <div x-show="openAction" 
-                                  @click.away="openAction = false"
-                                  x-transition:enter="transition ease-out duration-100"
-                                  x-transition:leave="transition ease-in duration-75"
-                                  x-cloak
-                                  class="absolute mt-2 rounded-lg shadow-xl bg-white ring-1 ring-black/5 z-20 
-                                         md:w-56 md:right-0 md:left-auto w-full left-0 right-0 mx-auto max-w-xs sm:max-w-sm">
-                                 <div class="py-1" role="menu">
-                                     <a href="#" @click="openImportModal = true; openAction = false" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-import mr-2"></i> Impor dari Excel
-                                     </a>
-                                     <div class="border-t border-slate-100 my-1"></div>
-                                     <a href="{{ route('lulusan.export.excel') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-excel mr-2"></i> Ekspor ke Excel
-                                     </a>
-                                     <a href="{{ route('lulusan.export.pdf') }}" target="_blank" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-pdf mr-2"></i> Ekspor ke PDF
-                                     </a>
-                                 </div>
-                             </div>
-                        </div>
-                        
-                        {{-- Tombol Tambah --}}
-                        <a href="{{ route('lulusan.create') }}" class="btn-primary w-full sm:w-auto text-sm">
-                            <i class="fas fa-plus mr-1"></i> Tambah Lulusan
-                        </a>
                     </div>
                 </div>
             </div> {{-- Akhir Card Header --}}
@@ -195,10 +162,17 @@
                                     <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-slate-900">{{ $data->nisn }}</td>
                                     <td class="px-6 py-3 whitespace-nowrap text-sm text-slate-700">{{ $data->nama }}</td>
                                     
-                                    {{-- Jenis Kelamin (Badge Dinamis Tailwind) --}}
-                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-slate-700">
-                                        @php $color = $data->jenis_kelamin == 'Laki-laki' ? 'blue' : 'pink'; @endphp
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-{{ $color }}-100 text-{{ $color }}-800">{{ $data->jenis_kelamin }}</span>
+                                    {{-- Jenis Kelamin (Badge Premium) --}}
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm">
+                                        @if($data->jenis_kelamin == 'Laki-laki')
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                                <i class="fas fa-mars mr-1.5 text-blue-500"></i> Laki-laki
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                                <i class="fas fa-venus mr-1.5 text-rose-500"></i> Perempuan
+                                            </span>
+                                        @endif
                                     </td>
                                     
                                     <td class="px-6 py-3 whitespace-nowrap text-sm text-slate-700">{{ $data->tahun_lulus }}</td>

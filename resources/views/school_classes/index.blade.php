@@ -7,6 +7,7 @@
 --}}
 
 @section('content')
+    <div x-data="{ selectedIds: [] }" class="space-y-6">
     {{-- Page Header --}}
     <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div class="space-y-1">
@@ -21,7 +22,7 @@
         </div>
     </div>
 
-    <div class="space-y-6">
+
     <div class="bg-white rounded-xl shadow-lg border-t-4 border-indigo-600">
       {{-- Card Header: Toolbar --}}
       <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center bg-slate-50/50">

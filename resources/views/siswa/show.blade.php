@@ -49,14 +49,17 @@
 
                             {{-- Jenis Kelamin --}}
                             <div class="sm:col-span-1">
-                                @php
-                                    $color = $siswa->jenis_kelamin == 'Laki-laki' ? 'blue' : 'pink';
-                                @endphp
                                 <dt class="font-medium text-slate-500">Jenis Kelamin</dt>
                                 <dd class="mt-1">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-{{ $color }}-100 text-{{ $color }}-800">
-                                        {{ $siswa->jenis_kelamin }}
-                                    </span>
+                                    @if($siswa->jenis_kelamin == 'Laki-laki')
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                            <i class="fas fa-mars mr-1.5 text-blue-500"></i> Laki-laki
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                            <i class="fas fa-venus mr-1.5 text-rose-500"></i> Perempuan
+                                        </span>
+                                    @endif
                                 </dd>
                             </div>
                             
