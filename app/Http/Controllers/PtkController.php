@@ -4,7 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Ptk;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule; // Import Rule
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Exports\PtkExport;
+use App\Exports\PtkTemplateExport;
+use App\Imports\PtkImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PtkController extends Controller
 {
@@ -28,9 +35,13 @@ class PtkController extends Controller
         $sortBy = $request->input('sort_by', 'created_at');
         $sortOrder = $request->input('sort_order', 'desc');
         
-        $ptk = $query->orderBy($sortBy, $sortOrder)->paginate(10);
+        // Fitur per_page & Custom Limit
+        $perPage = $request->input('per_page', 10);
+        $ptk = $query->orderBy($sortBy, $sortOrder)->paginate($perPage)->appends($request->except('page'));
         
-        return view('ptk.index', compact('ptk', 'sortBy', 'sortOrder'));
+        $totalData = Ptk::count();
+        
+        return view('ptk.index', compact('ptk', 'sortBy', 'sortOrder', 'totalData'));
     }
 
     public function create()
@@ -136,5 +147,68 @@ class PtkController extends Controller
 
         return redirect()->route('ptk.index')
                          ->with('success', 'Data PTK berhasil dihapus.');
+    }
+
+    // =========================================================
+    // FITUR IMPOR/EKSPOR
+    // =========================================================
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (empty($ids)) {
+            return redirect()->route('ptk.index')->with('error', 'Tidak ada data PTK yang dipilih.');
+        }
+        $deletedCount = Ptk::whereIn('id', $ids)->delete();
+        if ($deletedCount > 0) {
+            return redirect()->route('ptk.index')->with('success', "{$deletedCount} data PTK berhasil dihapus.");
+        }
+        return redirect()->route('ptk.index')->with('error', 'Gagal menghapus data.');
+    }
+
+    public function importExcel(Request $request)
+    {
+        $request->validate(['file' => 'required|file|mimes:xls,xlsx|max:10240']);
+        $import = new PtkImport;
+
+        try {
+            DB::transaction(function () use ($import, $request) {
+                Excel::import($import, $request->file('file'));
+            });
+        } catch (\Exception $e) {
+            Log::error('Impor PTK Gagal: ' . $e->getMessage());
+            return redirect()->route('ptk.index')->with('error', 'Terjadi kesalahan impor yang tidak terduga.');
+        }
+
+        $failures = $import->getFailures();
+        if (count($failures) > 0) {
+            $msg = 'Impor selesai, tetapi beberapa baris ditolak: ';
+            foreach ($failures as $f) {
+                $msg .= 'Baris ' . $f->row() . ': ' . implode('; ', $f->errors()) . ' | ';
+            }
+            return redirect()->route('ptk.index')->with('warning', rtrim($msg, ' | '));
+        }
+
+        return redirect()->route('ptk.index')->with('success', 'Data PTK berhasil diimpor!');
+    }
+
+    public function exportExcel()
+    {
+        $timestamp = now()->format('Ymd_His');
+        return Excel::download(new PtkExport, "Data_PTK_{$timestamp}.xlsx");
+    }
+
+    public function templateExcel()
+    {
+        return Excel::download(new PtkTemplateExport, "Template_Impor_PTK.xlsx");
+    }
+
+    public function exportPdf()
+    {
+        $data = Ptk::orderBy('nama', 'asc')->get();
+        $pdf = Pdf::loadView('ptk.pdf_export', compact('data'))
+                  ->setPaper('A4', 'landscape');
+        $timestamp = now()->format('Ymd_His');
+        return $pdf->download("Data_PTK_{$timestamp}.pdf");
     }
 }

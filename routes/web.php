@@ -72,11 +72,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Modul 1: Nomor Surat
+    Route::post('nomor-surat/import/excel', [NomorSuratController::class, 'importExcel'])->name('nomor-surat.import.excel');
+    Route::get('nomor-surat/download/template', [NomorSuratController::class, 'templateExcel'])->name('nomor-surat.template.excel');
     Route::get('nomor-surat/export/excel', [NomorSuratController::class, 'exportExcel'])->name('nomor-surat.export.excel');
     Route::get('nomor-surat/export/pdf', [NomorSuratController::class, 'exportPdf'])->name('nomor-surat.export.pdf');
+    Route::delete('nomor-surat/bulk-destroy', [NomorSuratController::class, 'bulkDestroy'])->name('nomor-surat.bulk.destroy');
     Route::resource('nomor-surat', NomorSuratController::class);
 
     // Modul 2: Buku Induk Arsip
+    Route::post('buku-induk-arsip/import/excel', [BukuIndukArsipController::class, 'importExcel'])->name('buku-induk-arsip.import.excel');
+    Route::get('buku-induk-arsip/download/template', [BukuIndukArsipController::class, 'templateExcel'])->name('buku-induk-arsip.template.excel');
+    Route::get('buku-induk-arsip/export/excel', [BukuIndukArsipController::class, 'exportExcel'])->name('buku-induk-arsip.export.excel');
+    Route::get('buku-induk-arsip/export/pdf', [BukuIndukArsipController::class, 'exportPdf'])->name('buku-induk-arsip.export.pdf');
+    Route::delete('buku-induk-arsip/bulk-destroy', [BukuIndukArsipController::class, 'bulkDestroy'])->name('buku-induk-arsip.bulk.destroy');
     Route::resource('buku-induk-arsip', BukuIndukArsipController::class);
 
     // Modul 3: Lulusan
@@ -87,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('lulusan', LulusanController::class);
 
     // Modul 4: Data Siswa (Aktif)
+    Route::get('siswa/download/template', [SiswaController::class, 'templateExcel'])->name('siswa.template.excel');
     Route::post('siswa/import/excel', [SiswaController::class, 'importExcel'])->name('siswa.import.excel');
     Route::get('siswa/export/excel', [SiswaController::class, 'exportExcel'])->name('siswa.export.excel');
     Route::get('siswa/export/pdf', [SiswaController::class, 'exportPdf'])->name('siswa.export.pdf');
@@ -97,6 +106,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('school-classes', SchoolClassController::class);
 
     // Modul 5: Data PTK (ADMIN PATH)
+    Route::post('data-ptk/import/excel', [PtkController::class, 'importExcel'])->name('ptk.import.excel');
+    Route::get('data-ptk/download/template', [PtkController::class, 'templateExcel'])->name('ptk.template.excel');
+    Route::get('data-ptk/export/excel', [PtkController::class, 'exportExcel'])->name('ptk.export.excel');
+    Route::get('data-ptk/export/pdf', [PtkController::class, 'exportPdf'])->name('ptk.export.pdf');
+    Route::delete('data-ptk/bulk-destroy', [PtkController::class, 'bulkDestroy'])->name('ptk.bulk.destroy');
     Route::resource('data-ptk', PtkController::class)
         ->names('ptk')
         ->parameters(['data-ptk' => 'ptk']);

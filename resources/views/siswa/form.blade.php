@@ -104,17 +104,73 @@
             @error('agama') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
-        {{-- Alamat (Full Width) --}}
-        <div>
-            <label for="alamat" class="block text-sm font-semibold text-slate-700 mb-1">Alamat Lengkap <span class="text-red-500">*</span></label>
-            <textarea name="alamat" id="alamat" 
-                      class="form-textarea w-full @error('alamat') border-red-500 @enderror" 
-                      rows="2" required>{{ old('alamat', $siswa->alamat ?? '') }}</textarea>
-            @error('alamat') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+        {{-- SEKSI ALAMAT --}}
+        <h5 class="mt-2 text-lg font-semibold text-indigo-600 border-b border-slate-100 pb-2 mb-4">II. Alamat Tempat Tinggal</h5>
+
+        {{-- Baris: Kampung & RT & RW --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Kampung --}}
+            <div>
+                <label for="kampung" class="block text-sm font-semibold text-slate-700 mb-1">Nama Kampung/Gang</label>
+                <input type="text" name="kampung" id="kampung"
+                       class="form-input w-full @error('kampung') border-red-500 @enderror"
+                       placeholder="cth: Kp. Cibeureum"
+                       value="{{ old('kampung', $siswa->kampung ?? '') }}">
+                @error('kampung') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+            {{-- RT --}}
+            <div>
+                <label for="rt" class="block text-sm font-semibold text-slate-700 mb-1">RT</label>
+                <input type="text" name="rt" id="rt"
+                       class="form-input w-full @error('rt') border-red-500 @enderror"
+                       placeholder="cth: 001"
+                       value="{{ old('rt', $siswa->rt ?? '') }}">
+                @error('rt') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+            {{-- RW --}}
+            <div>
+                <label for="rw" class="block text-sm font-semibold text-slate-700 mb-1">RW</label>
+                <input type="text" name="rw" id="rw"
+                       class="form-input w-full @error('rw') border-red-500 @enderror"
+                       placeholder="cth: 003"
+                       value="{{ old('rw', $siswa->rw ?? '') }}">
+                @error('rw') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+        </div>
+
+        {{-- Baris: Desa, Kota, Provinsi --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Desa --}}
+            <div>
+                <label for="desa" class="block text-sm font-semibold text-slate-700 mb-1">Desa/Kelurahan</label>
+                <input type="text" name="desa" id="desa"
+                       class="form-input w-full @error('desa') border-red-500 @enderror"
+                       placeholder="cth: Sukajaya"
+                       value="{{ old('desa', $siswa->desa ?? '') }}">
+                @error('desa') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+            {{-- Kota --}}
+            <div>
+                <label for="kota" class="block text-sm font-semibold text-slate-700 mb-1">Kota/Kabupaten</label>
+                <input type="text" name="kota" id="kota"
+                       class="form-input w-full @error('kota') border-red-500 @enderror"
+                       placeholder="cth: Kab. Bandung"
+                       value="{{ old('kota', $siswa->kota ?? '') }}">
+                @error('kota') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+            {{-- Provinsi --}}
+            <div>
+                <label for="provinsi" class="block text-sm font-semibold text-slate-700 mb-1">Provinsi</label>
+                <input type="text" name="provinsi" id="provinsi"
+                       class="form-input w-full @error('provinsi') border-red-500 @enderror"
+                       placeholder="cth: Jawa Barat"
+                       value="{{ old('provinsi', $siswa->provinsi ?? '') }}">
+                @error('provinsi') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
         </div>
         
         {{-- Data Orang Tua --}}
-        <h5 class="mt-4 text-lg font-semibold text-indigo-600 border-b border-slate-100 pb-2 mb-4">II. Data Orang Tua</h5>
+        <h5 class="mt-4 text-lg font-semibold text-indigo-600 border-b border-slate-100 pb-2 mb-4">III. Data Orang Tua</h5>
 
         {{-- Baris 3: Nama Ayah & Nama Ibu --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

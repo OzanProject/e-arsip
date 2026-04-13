@@ -26,7 +26,12 @@ class SiswaExport implements FromCollection, WithHeadings, ShouldAutoSize, WithM
             \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('Y-m-d'),
             $siswa->kelas,
             $siswa->agama,
-            $siswa->alamat,
+            $siswa->kampung,
+            $siswa->rt,
+            $siswa->rw,
+            $siswa->desa,
+            $siswa->kota,
+            $siswa->provinsi,
             $siswa->nama_ayah,
             $siswa->nama_ibu,
             $siswa->telepon,
@@ -37,7 +42,8 @@ class SiswaExport implements FromCollection, WithHeadings, ShouldAutoSize, WithM
     {
         return [
             'NISN', 'NIS', 'NAMA', 'JENIS_KELAMIN', 'TEMPAT_LAHIR', 'TANGGAL_LAHIR (YYYY-MM-DD)', 
-            'KELAS', 'AGAMA', 'ALAMAT', 'NAMA_AYAH', 'NAMA_IBU', 'TELEPON'
+            'KELAS', 'AGAMA', 'KAMPUNG', 'RT', 'RW', 'DESA', 'KOTA', 'PROVINSI', 
+            'NAMA_AYAH', 'NAMA_IBU', 'TELEPON'
         ];
     }
 }

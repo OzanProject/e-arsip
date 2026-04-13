@@ -105,7 +105,7 @@
 
         {{-- Pagination Links --}}
         <div class="mt-10">
-            {{ $arsipList->appends(request()->except('page'))->links('pagination::tailwind') }}
+            {{ $arsipList->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
         </div>
 
     </div>

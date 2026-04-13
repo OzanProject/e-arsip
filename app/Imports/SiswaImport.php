@@ -32,7 +32,9 @@ class SiswaImport implements
 
     public function map($row): array
     {
-        // 0=NISN, 1=NIS, 2=Nama, 3=Jenis Kelamin, 4=Tempat Lahir, 5=Tanggal Lahir (Excel), 6=Kelas, 7=Agama, 8=Alamat, 9=Nama Ayah, 10=Nama Ibu, 11=Telepon
+        // 0=NISN, 1=NIS, 2=Nama, 3=Jenis Kelamin, 4=Tempat Lahir, 5=Tanggal Lahir (Excel), 6=Kelas, 7=Agama, 
+        // 8=Kampung, 9=RT, 10=RW, 11=Desa, 12=Kota, 13=Provinsi, 
+        // 14=Nama Ayah, 15=Nama Ibu, 16=Telepon
         
         return [
             'nisn'              => (string) ($row[0] ?? ''),
@@ -43,25 +45,36 @@ class SiswaImport implements
             'tanggal_lahir_excel' => $row[5] ?? null, 
             'kelas'             => (string) ($row[6] ?? ''),
             'agama'             => (string) ($row[7] ?? ''),
-            'alamat'            => (string) ($row[8] ?? ''),
-            'nama_ayah'         => (string) ($row[9] ?? ''),
-            'nama_ibu'          => (string) ($row[10] ?? ''),
-            'telepon'           => (string) ($row[11] ?? ''),
+            'kampung'           => (string) ($row[8] ?? ''),
+            'rt'                => (string) ($row[9] ?? ''),
+            'rw'                => (string) ($row[10] ?? ''),
+            'desa'              => (string) ($row[11] ?? ''),
+            'kota'              => (string) ($row[12] ?? ''),
+            'provinsi'          => (string) ($row[13] ?? ''),
+            'nama_ayah'         => (string) ($row[14] ?? ''),
+            'nama_ibu'          => (string) ($row[15] ?? ''),
+            'telepon'           => (string) ($row[16] ?? ''),
         ];
     }
     
     public function rules(): array
     {
         return [
-            'nisn'          => ['required', 'string', 'max:15', 'unique:siswa,nisn'],
-            'nis'           => ['required', 'string', 'max:10', 'unique:siswa,nis'],
+            'nisn'          => ['required', 'string', 'max:15'],
+            'nis'           => ['required', 'string', 'max:10'],
             'nama'          => ['required', 'string', 'max:255'],
             'jenis_kelamin' => ['required', 'in:Laki-laki,Perempuan'],
             'tempat_lahir'  => ['required', 'string', 'max:100'],
             'tanggal_lahir_excel' => ['required'],
             'kelas'         => ['required', 'string', 'max:10'],
             'agama'         => ['required', 'string', 'max:50'],
-            'alamat'        => ['required', 'string'],
+            // Alamat opsional di Excel tapi disarankan
+            'kampung'       => ['nullable', 'string', 'max:100'],
+            'rt'            => ['nullable', 'string', 'max:5'],
+            'rw'            => ['nullable', 'string', 'max:5'],
+            'desa'          => ['nullable', 'string', 'max:100'],
+            'kota'          => ['nullable', 'string', 'max:100'],
+            'provinsi'      => ['nullable', 'string', 'max:100'],
             'nama_ayah'     => ['required', 'string', 'max:255'],
             'nama_ibu'      => ['required', 'string', 'max:255'],
         ];
@@ -69,7 +82,6 @@ class SiswaImport implements
 
     public function collection(Collection $rows)
     {
-        $dataToInsert = [];
         $currentRowNumber = $this->startRow() - 1; 
 
         foreach ($rows as $row) {
@@ -97,26 +109,28 @@ class SiswaImport implements
                 continue; 
             }
 
-            $dataToInsert[] = [
-                'nisn'              => $row['nisn'],
-                'nis'               => $row['nis'],
-                'nama'              => $row['nama'],
-                'jenis_kelamin'     => $row['jenis_kelamin'],
-                'tempat_lahir'      => $row['tempat_lahir'],
-                'tanggal_lahir'     => $tanggal_lahir_mysql, 
-                'kelas'             => $row['kelas'],
-                'agama'             => $row['agama'] ?? 'Islam', // Asumsi agama ada di kolom 7, jika tidak isi default
-                'alamat'            => $row['alamat'],
-                'nama_ayah'         => $row['nama_ayah'],
-                'nama_ibu'          => $row['nama_ibu'],
-                'telepon'           => $row['telepon'] ?? null,
-                'created_at'        => now(),
-                'updated_at'        => now(),
-            ];
-        }
-
-        if (!empty($dataToInsert)) {
-            DB::table('siswa')->insert($dataToInsert);
+            // Gunakan updateOrCreate untuk menghindari duplikasi dan memungkinkan update massal
+            Siswa::updateOrCreate(
+                ['nisn' => $row['nisn']], // Cari berdasarkan NISN
+                [
+                    'nis'               => $row['nis'],
+                    'nama'              => $row['nama'],
+                    'jenis_kelamin'     => $row['jenis_kelamin'],
+                    'tempat_lahir'      => $row['tempat_lahir'],
+                    'tanggal_lahir'     => $tanggal_lahir_mysql, 
+                    'kelas'             => $row['kelas'],
+                    'agama'             => $row['agama'] ?? 'Islam',
+                    'kampung'           => $row['kampung'],
+                    'rt'                => $row['rt'],
+                    'rw'                => $row['rw'],
+                    'desa'              => $row['desa'],
+                    'kota'              => $row['kota'],
+                    'provinsi'          => $row['provinsi'],
+                    'nama_ayah'         => $row['nama_ayah'],
+                    'nama_ibu'          => $row['nama_ibu'],
+                    'telepon'           => $row['telepon'] ?? null,
+                ]
+            );
         }
     }
 
@@ -133,7 +147,32 @@ class SiswaImport implements
     public function chunkSize(): int { return 1000; }
     public function onFailure(Failure ...$failures): void { $this->failures = array_merge($this->failures, $failures); }
     public function getFailures(): array { return $this->failures; }
-    public function customValidationAttributes() { return ['tanggal_lahir_excel' => 'Tanggal Lahir']; }
-    public function customValidationMessages() { return ['required' => 'Kolom :attribute wajib diisi.', 'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan.']; }
+    public function customValidationAttributes()
+    {
+        return [
+            'nisn'          => 'NISN',
+            'nis'           => 'NIS',
+            'nama'          => 'Nama',
+            'jenis_kelamin' => 'Jenis Kelamin',
+            'tempat_lahir'  => 'Tempat Lahir',
+            'tanggal_lahir_excel' => 'Tanggal Lahir',
+            'kelas'         => 'Kelas',
+            'agama'         => 'Agama',
+            'nama_ayah'     => 'Nama Ayah',
+            'nama_ibu'      => 'Nama Ibu',
+            'telepon'       => 'Telepon',
+        ];
+    }
+
+    public function customValidationMessages()
+    {
+        return [
+            'required' => 'Kolom :attribute wajib diisi.',
+            'unique'   => ':attribute sudah terdaftar di sistem.',
+            'in'       => 'Isian :attribute tidak valid.',
+            'max'      => 'Isian :attribute terlalu panjang (maksimal :max karakter).',
+            'string'   => 'Isian :attribute harus berupa teks.',
+        ];
+    }
 
 }

@@ -31,10 +31,13 @@ class LulusanController extends Controller
                 ->orWhere('tahun_lulus', 'like', "%{$search}%");
         }
 
-        // PERUBAHAN: Default urutan perbaruan data (created_at desc)
-        $lulusan = $query->orderBy('created_at', 'desc')->paginate(10);
+        // PERUBAHAN: Custom limit per_page
+        $perPage = $request->input('per_page', 10);
+        $lulusan = $query->orderBy('created_at', 'desc')->paginate($perPage)->appends($request->except('page'));
         
-        return view('lulusan.index', compact('lulusan'));
+        $totalData = \App\Models\Lulusan::count();
+        
+        return view('lulusan.index', compact('lulusan', 'totalData'));
     }
 
     public function create()

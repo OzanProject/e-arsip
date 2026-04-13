@@ -182,7 +182,7 @@
                 Menampilkan <span class="font-bold">{{ $users->firstItem() }}</span> - <span class="font-bold">{{ $users->lastItem() }}</span> dari <span class="font-bold">{{ $users->total() }}</span> data
             </div>
             <div class="w-full sm:w-auto">
-                {{ $users->appends(request()->except('page'))->links('pagination::tailwind') }}
+                {{ $users->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
             </div>
         </div>
 

@@ -29,38 +29,7 @@
     {{-- AOS ANIMATION & PRELOADER STYLE --}}
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        /* PRELOADER STYLE */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
-            opacity: 1;
-            visibility: visible;
-        }
-        .hidden-preloader {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .loader-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4f46e5; /* Indigo-600 */
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* (Preloader style dihapus) */
     </style>
 
     @stack('styles')
@@ -69,14 +38,7 @@
 {{-- BODY CLASS: Menggunakan slate-50 yang lebih lembut --}}
 <body class="bg-slate-50 font-sans antialiased text-slate-800">
 
-    {{-- PRELOADER ELEMENT --}}
-    <div id="preloader">
-        <div class="text-center">
-            <div class="loader-spinner mx-auto mb-3"></div>
-            <p id="preloader-text" class="text-indigo-600 font-semibold tracking-wider animate-pulse">Memuat Aplikasi...</p>
-        </div>
-    </div>
-    
+    {{-- PRELOADER ELEMENT TELAH DIHAPUS --}}
     {{-- STRUCTURE UTAMA --}}
     <div class="min-h-screen flex bg-slate-50">
 
@@ -166,71 +128,10 @@
             easing: 'ease-out-cubic',
         });
 
-        // --- DYNAMIC PRELOADER LOGIC ---
-        const preloader = document.getElementById('preloader');
-        const preloaderText = document.getElementById('preloader-text');
+        // --- DYNAMIC PRELOADER LOGIC DIHAPUS BERSAMAAN DENGAN SEMUA EVENT TERKAIT ---
 
-        function showPreloader(text = 'Memuat...') {
-            if (preloader && preloaderText) {
-                preloader.style.display = 'flex'; // Pastikan display flex sebelum menghapus class hidden
-                // Force triggering reflow agar transisi opacity berjalan jika sebelumnya hidden
-                void preloader.offsetWidth; 
-                
-                preloaderText.textContent = text;
-                preloader.classList.remove('hidden-preloader');
-            }
-        }
-
-        function hidePreloader() {
-            if (preloader) {
-                preloader.classList.add('hidden-preloader');
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 300); // Sesuaikan dengan durasi CSS transition
-            }
-        }
-
-        // 1. Hide on Window Load (Data sudah siap)
-        window.addEventListener('load', function() {
-            hidePreloader();
-        });
-
-        // 2. Hide on Pageshow (Fix untuk Back/Forward Cache browser modern)
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                hidePreloader();
-            }
-        });
-
-        // 3. Intercept Link Clicks
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('a');
-            
-            if (link) {
-                const href = link.getAttribute('href');
-                const target = link.getAttribute('target');
-                
-                // Cek apakah link internal valid dan bukan anchor/javascript
-                if (href && 
-                    !href.startsWith('#') && 
-                    !href.startsWith('javascript') && 
-                    target !== '_blank' &&
-                    !e.ctrlKey && !e.metaKey && // Tidak ditrigger jika Ctrl/Cmd+Click (new tab)
-                    !href.includes('export') &&  // SKIP jika link export
-                    !href.includes('download')   // SKIP jika link download
-                ) {
-                    
-                    // Coba ambil teks menu dari dalam link (misal span, atau text langsung)
-                    let menuText = link.innerText.trim() || 'Halaman';
-                    
-                    // Potong jika terlalu panjang
-                    if (menuText.length > 20) menuText = menuText.substring(0, 20) + '...';
-                    
-                    // Show Preloader
-                    showPreloader(`Memuat ${menuText}...`);
-                }
-            }
-        });
+        // 3. Intercept Link Clicks (Dihapus untuk mencegah layat preloader nyangkut saat download file)
+        // Link navigation akan berjalan normal tanpa preloader intermediasi.
 
         // 4. Intercept Form Submits
         // document.addEventListener('submit', function(e) {
@@ -249,7 +150,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
-                    text: "{{ session('success') }}",
+                    html: "{!! session('success') !!}",
                     timer: 3000,
                     showConfirmButton: false,
                     timerProgressBar: true,
@@ -261,7 +162,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
-                    text: "{{ session('error') }}",
+                    html: "{!! session('error') !!}",
                 });
             @endif
 
@@ -269,7 +170,7 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Peringatan!',
-                    text: "{{ session('warning') }}",
+                    html: "{!! session('warning') !!}",
                 });
             @endif
 

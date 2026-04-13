@@ -72,10 +72,34 @@
                                 <dd class="mt-1 text-slate-900">{{ $siswa->agama }}</dd>
                             </div>
 
-                            {{-- Alamat (Full width) --}}
+                            {{-- Alamat Terpisah --}}
+                            <div class="sm:col-span-1">
+                                <dt class="font-medium text-slate-500">Kampung / Jalan</dt>
+                                <dd class="mt-1 text-slate-900">{{ $siswa->kampung ?? '-' }}</dd>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <dt class="font-medium text-slate-500">RT / RW</dt>
+                                <dd class="mt-1 text-slate-900">RT {{ $siswa->rt ?? '-' }} / RW {{ $siswa->rw ?? '-' }}</dd>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <dt class="font-medium text-slate-500">Desa / Kelurahan</dt>
+                                <dd class="mt-1 text-slate-900">{{ $siswa->desa ?? '-' }}</dd>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <dt class="font-medium text-slate-500">Kota / Kabupaten</dt>
+                                <dd class="mt-1 text-slate-900">{{ $siswa->kota ?? '-' }}</dd>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <dt class="font-medium text-slate-500">Provinsi</dt>
+                                <dd class="mt-1 text-slate-900">{{ $siswa->provinsi ?? '-' }}</dd>
+                            </div>
+                            
+                            {{-- Tampilkan Alamat Lengkap (Attribute) --}}
                             <div class="sm:col-span-2">
-                                <dt class="font-medium text-slate-500">Alamat</dt>
-                                <dd class="mt-1 text-slate-900 whitespace-pre-wrap">{{ $siswa->alamat }}</dd>
+                                <dt class="font-medium text-slate-500">Keterangan Alamat Lengkap</dt>
+                                <dd class="mt-1 text-slate-900 bg-slate-50 p-2 rounded border border-slate-100 italic text-xs">
+                                    {{ $siswa->alamat_lengkap }}
+                                </dd>
                             </div>
                         </dl>
                     </section>

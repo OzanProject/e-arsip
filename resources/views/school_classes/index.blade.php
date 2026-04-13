@@ -92,7 +92,7 @@
       {{-- Footer / Pagination --}}
       @if($schoolClasses->hasPages())
         <div class="px-6 py-4 border-t border-slate-200">
-          {{ $schoolClasses->links('pagination::tailwind') }}
+          {{ $schoolClasses->onEachSide(1)->links('pagination::tailwind') }}
         </div>
       @endif
     </div>

@@ -150,7 +150,7 @@
                 Menampilkan <span class="font-bold">{{ $sarpras->firstItem() }}</span> - <span class="font-bold">{{ $sarpras->lastItem() }}</span> dari <span class="font-bold">{{ $sarpras->total() }}</span> data
             </div>
             <div class="w-full sm:w-auto">
-                {{ $sarpras->appends(request()->except('page'))->links('pagination::tailwind') }}
+                {{ $sarpras->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
             </div>
         </div>
 

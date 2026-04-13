@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Siswa;
 use App\Models\SchoolClass;
 use App\Exports\SiswaExport;
+use App\Exports\SiswaTemplateExport;
 use App\Imports\SiswaImport;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -33,21 +34,24 @@ class SiswaController extends Controller
         // Default: Urutan Kelas (7, 8, 9) lalu Nama
         $sortBy = $request->input('sort_by', 'kelas');
         $sortOrder = $request->input('sort_order', 'asc');
+        $perPage   = $request->input('per_page', 10);
 
         // Custom Sorting Logic
         if ($sortBy === 'kelas') {
-            // Urutkan berdasarkan angka awal kelas (7, 8, 9) agar 7A, 8A, 9A urut
-            // Kemudian berdasarkan huruf kelas, lalu nama
             $siswa = $query->orderByRaw('CAST(SUBSTR(kelas, 1, 1) AS UNSIGNED) ASC')
                 ->orderBy('kelas', 'asc')
                 ->orderBy('nama', 'asc')
-                ->paginate(10);
+                ->paginate($perPage)
+                ->appends($request->except('page'));
         } else {
-            // Jika sorting custom lain (misal nama, nisn)
-            $siswa = $query->orderBy($sortBy, $sortOrder)->paginate(10);
+            $siswa = $query->orderBy($sortBy, $sortOrder)
+                ->paginate($perPage)
+                ->appends($request->except('page'));
         }
 
-        return view('siswa.index', compact('siswa', 'sortBy', 'sortOrder'));
+        $totalData = \App\Models\Siswa::count();
+
+        return view('siswa.index', compact('siswa', 'sortBy', 'sortOrder', 'totalData'));
     }
 
     public function create()
@@ -66,18 +70,24 @@ class SiswaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nisn' => 'required|string|max:15|unique:siswa,nisn',
-            'nis' => 'required|string|max:10|unique:siswa,nis',
-            'nama' => 'required|string|max:255',
+            'nisn'          => 'required|string|max:15|unique:siswa,nisn',
+            'nis'           => 'required|string|max:10|unique:siswa,nis',
+            'nama'          => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'tempat_lahir' => 'required|string|max:100',
+            'tempat_lahir'  => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
-            'kelas' => 'required|string|max:10',
-            'agama' => 'required|string|max:50',
-            'alamat' => 'required|string',
+            'kelas'         => 'required|string|max:10',
+            'agama'         => 'required|string|max:50',
+            // Alamat terpisah
+            'kampung'  => 'nullable|string|max:100',
+            'rt'       => 'nullable|string|max:5',
+            'rw'       => 'nullable|string|max:5',
+            'desa'     => 'nullable|string|max:100',
+            'kota'     => 'nullable|string|max:100',
+            'provinsi' => 'nullable|string|max:100',
             'nama_ayah' => 'required|string|max:255',
-            'nama_ibu' => 'required|string|max:255',
-            'telepon' => 'nullable|string|max:20',
+            'nama_ibu'  => 'required|string|max:255',
+            'telepon'   => 'nullable|string|max:20',
         ]);
 
         Siswa::create($validated);
@@ -103,19 +113,24 @@ class SiswaController extends Controller
     public function update(Request $request, Siswa $siswa)
     {
         $validated = $request->validate([
-            // Unique kecuali data saat ini
-            'nisn' => 'required|string|max:15|unique:siswa,nisn,' . $siswa->id,
-            'nis' => 'required|string|max:10|unique:siswa,nis,' . $siswa->id,
-            'nama' => 'required|string|max:255',
+            'nisn'          => 'required|string|max:15|unique:siswa,nisn,' . $siswa->id,
+            'nis'           => 'required|string|max:10|unique:siswa,nis,' . $siswa->id,
+            'nama'          => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'tempat_lahir' => 'required|string|max:100',
+            'tempat_lahir'  => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
-            'kelas' => 'required|string|max:10',
-            'agama' => 'required|string|max:50',
-            'alamat' => 'required|string',
+            'kelas'         => 'required|string|max:10',
+            'agama'         => 'required|string|max:50',
+            // Alamat terpisah
+            'kampung'  => 'nullable|string|max:100',
+            'rt'       => 'nullable|string|max:5',
+            'rw'       => 'nullable|string|max:5',
+            'desa'     => 'nullable|string|max:100',
+            'kota'     => 'nullable|string|max:100',
+            'provinsi' => 'nullable|string|max:100',
             'nama_ayah' => 'required|string|max:255',
-            'nama_ibu' => 'required|string|max:255',
-            'telepon' => 'nullable|string|max:20',
+            'nama_ibu'  => 'required|string|max:255',
+            'telepon'   => 'nullable|string|max:20',
         ]);
 
         $siswa->update($validated);
@@ -174,10 +189,18 @@ class SiswaController extends Controller
 
         $failures = $import->getFailures();
         if (count($failures) > 0) {
-            $errorMessage = 'Impor Selesai, tetapi beberapa baris DITOLAK:';
-            foreach ($failures as $failure) {
-                $errorMessage .= ' Baris ' . $failure->row() . ': ' . implode('; ', $failure->errors());
+            $maxErrors = 10;
+            $displayedErrors = array_slice($failures, 0, $maxErrors);
+            $errorMessage = 'Impor Selesai, tetapi ' . count($failures) . ' baris DITOLAK: <br>';
+            
+            foreach ($displayedErrors as $failure) {
+                $errorMessage .= '- Baris ' . $failure->row() . ': ' . implode('; ', $failure->errors()) . '<br>';
             }
+            
+            if (count($failures) > $maxErrors) {
+                $errorMessage .= '... dan ' . (count($failures) - $maxErrors) . ' kesalahan lainnya.';
+            }
+            
             return redirect()->route('siswa.index')->with('warning', $errorMessage);
         }
 
@@ -190,10 +213,15 @@ class SiswaController extends Controller
         return Excel::download(new SiswaExport, "Siswa_Aktif_List_{$timestamp}.xlsx");
     }
 
+    public function templateExcel()
+    {
+        return Excel::download(new SiswaTemplateExport, "Template_Impor_Siswa.xlsx");
+    }
+
     public function exportPdf()
     {
         $data = Siswa::orderBy('kelas', 'asc')->orderBy('nama', 'asc')->get();
-        $pdf = Pdf::loadView('siswa.pdf_export', compact('data'))->setPaper('A4', 'portrait');
+        $pdf = Pdf::loadView('siswa.pdf_export', compact('data'))->setPaper('A4', 'landscape');
         $timestamp = now()->format('Ymd_His');
         return $pdf->download("Siswa_Aktif_List_{$timestamp}.pdf");
     }

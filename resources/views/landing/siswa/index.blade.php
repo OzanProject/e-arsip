@@ -82,7 +82,7 @@
 
         {{-- Pagination Links --}}
         <div class="mt-10">
-            {{ $siswaList->appends(request()->except('page'))->links('pagination::tailwind') }}
+            {{ $siswaList->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
         </div>
 
     </div>

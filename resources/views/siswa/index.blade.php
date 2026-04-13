@@ -36,7 +36,7 @@
                                        required>
                                        
                                 <small class="text-slate-500 text-xs block pt-2">
-                                    Unduh <a href="{{ route('siswa.export.excel') }}" class="text-indigo-600 hover:text-indigo-800 font-medium">template ini</a> untuk memastikan format kolom sudah benar.
+                                    Unduh <a href="{{ route('siswa.template.excel') }}" class="text-indigo-600 hover:text-indigo-800 font-medium">template ini</a> untuk memastikan format kolom sudah benar.
                                 </small>
                             </div>
                         </div>
@@ -217,13 +217,24 @@
             </div>
             
             {{-- Card Footer: Pagination --}}
-            <div class="px-6 py-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center text-sm">
-                <div class="mb-3 sm:mb-0 text-slate-600">
-                    Menampilkan {{ $siswa->firstItem() }} hingga {{ $siswa->lastItem() }} dari total {{ $siswa->total() }} data.
+            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="text-sm text-slate-500 flex flex-col sm:flex-row items-center gap-3">
+                    <div>
+                        Menampilkan <span class="font-bold">{{ $siswa->firstItem() ?? 0 }}</span> - <span class="font-bold">{{ $siswa->lastItem() ?? 0 }}</span> dari <span class="font-bold">{{ $totalData }}</span> data
+                    </div>
+                    <div class="sm:border-l sm:border-slate-300 sm:pl-3 flex items-center gap-2">
+                        <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Tampil:</span>
+                        <select onchange="window.location.href=this.value" class="text-sm border-slate-300 rounded-lg py-1 pl-3 pr-8 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm cursor-pointer hover:bg-slate-50 font-medium text-slate-700">
+                            @foreach([10, 25, 50, 100, 250] as $limit)
+                                <option value="{{ request()->fullUrlWithQuery(['per_page' => $limit, 'page' => 1]) }}" {{ request('per_page', 10) == $limit ? 'selected' : '' }}>
+                                    {{ $limit }} baris
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="w-full sm:w-auto">
-                    {{-- Menggunakan view pagination Tailwind --}}
-                    {{ $siswa->appends(request()->except('page'))->links('pagination::tailwind') }}
+                    {{ $siswa->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>

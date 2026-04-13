@@ -58,7 +58,11 @@
             {{-- NAVIGASI UTAMA --}}
             <nav class="space-y-1 text-sm">
 
-                {{-- DASHBOARD --}}
+                {{-- 1. MENU UTAMA --}}
+                {{-- 1. MENU UTAMA --}}
+                <div class="pt-2 pb-1 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                    Menu Utama
+                </div>
                 @php $isDashboardActive = request()->routeIs('dashboard'); @endphp
                 <a href="{{ route('dashboard') }}"
                    class="group flex items-center rounded-lg px-3 py-2.5 font-medium tracking-tight transition-all duration-150
@@ -69,104 +73,173 @@
                     <span>Dashboard</span>
                 </a>
 
-                {{-- Nav Header --}}
-                <div class="pt-4 pb-1 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500/80">
-                    Modul Utama Arsip
-                </div>
-
-                {{-- MODUL UTAMA ARSIP (Tanpa Nomor) --}}
-                @php $modules = [
-                    ['route' => 'nomor-surat.index', 'icon' => 'fas fa-tags', 'title' => 'Klasifikasi Nomor Surat'],
-                    ['route' => 'buku-induk-arsip.index', 'icon' => 'fas fa-envelope-open-text', 'title' => 'Buku Induk Arsip'],
-                ]; @endphp
-                @foreach ($modules as $module)
-                    @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
-                    <a href="{{ route($module['route']) }}"
-                       class="group flex items-center rounded-lg px-3 py-2.5 font-medium transition-all duration-150
-                              {{ $isActive
-                                    ? 'bg-indigo-700 text-white shadow-lg ring-1 ring-indigo-500/80'
-                                    : 'text-slate-300 hover:bg-slate-800 hover:text-slate-50 hover:shadow-sm' }}">
-                        <i class="{{ $module['icon'] }} mr-3 h-4 w-4 flex-shrink-0 text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
-                        <span>{{ $module['title'] }}</span>
-                    </a>
-                @endforeach
-                
-                {{-- Nav Header --}}
-                <div class="pt-4 pb-1 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500/80">
-                    Modul Kependidikan
-                </div>
-
-                {{-- MODUL KEPENDIDIKAN (Tanpa Nomor) --}}
-                @php $modules = [
-                    ['route' => 'lulusan.index', 'icon' => 'fas fa-graduation-cap', 'title' => 'Data Lulusan'],
-                    ['route' => 'school-classes.index', 'icon' => 'fas fa-chalkboard', 'title' => 'Manajemen Kelas'],
-                    ['route' => 'siswa.index', 'icon' => 'fas fa-user-graduate', 'title' => 'Data Siswa Aktif'],
-                    ['route' => 'ptk.index', 'icon' => 'fas fa-chalkboard-teacher', 'title' => 'Data PTK'],
-                    ['route' => 'administrasi-guru.index', 'icon' => 'fas fa-file-alt', 'title' => 'Administrasi Guru'],
-                    ['route' => 'administrasi-siswa.index', 'icon' => 'fas fa-folder-open', 'title' => 'Administrasi Siswa'],
-                    ['route' => 'daftar-hadir.index', 'icon' => 'fas fa-calendar-check', 'title' => 'Generator Daftar Hadir'],
-                ]; @endphp
-                @foreach ($modules as $module)
-                    @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
-                    <a href="{{ route($module['route']) }}"
-                       class="group flex items-center rounded-lg px-3 py-2.5 font-medium transition-all duration-150
-                              {{ $isActive
-                                    ? 'bg-indigo-700 text-white shadow-lg ring-1 ring-indigo-500/80'
-                                    : 'text-slate-300 hover:bg-slate-800 hover:text-slate-50 hover:shadow-sm' }}">
-                        <i class="{{ $module['icon'] }} mr-3 h-4 w-4 flex-shrink-0 text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
-                        <span>{{ $module['title'] }}</span>
-                    </a>
-                @endforeach
-
-                {{-- Nav Header --}}
-                <div class="pt-4 pb-1 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500/80">
-                    Inventaris & Aset
-                </div>
-
-                {{-- MODUL INVENTARIS (Tanpa Nomor) --}}
-                @php $modules = [
-                    ['route' => 'sarpras.index', 'icon' => 'fas fa-building', 'title' => 'Database Sarpras'],
-                    ['route' => 'buku-perpus.index', 'icon' => 'fas fa-book-reader', 'title' => 'Database Perpustakaan'],
-                ]; @endphp
-                @foreach ($modules as $module)
-                    @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
-                    <a href="{{ route($module['route']) }}"
-                       class="group flex items-center rounded-lg px-3 py-2.5 font-medium transition-all duration-150
-                              {{ $isActive
-                                    ? 'bg-indigo-700 text-white shadow-lg ring-1 ring-indigo-500/80'
-                                    : 'text-slate-300 hover:bg-slate-800 hover:text-slate-50 hover:shadow-sm' }}">
-                        <i class="{{ $module['icon'] }} mr-3 h-4 w-4 flex-shrink-0 text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
-                        <span>{{ $module['title'] }}</span>
-                    </a>
-                @endforeach
-
-                {{-- Nav Header --}}
-                {{-- Nav Header --}}
-                @if(Auth::user()->isAdmin())
-                    <div class="pt-4 pb-1 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500/80">
-                        Administrasi Sistem
+                {{-- 2. DATA MASTER --}}
+                @php 
+                    $masterData = [
+                        ['route' => 'school-classes.index', 'icon' => 'fas fa-chalkboard', 'title' => 'Manajemen Kelas'],
+                        ['route' => 'siswa.index', 'icon' => 'fas fa-user-graduate', 'title' => 'Data Siswa Aktif'],
+                        ['route' => 'ptk.index', 'icon' => 'fas fa-chalkboard-teacher', 'title' => 'Data PTK'],
+                        ['route' => 'lulusan.index', 'icon' => 'fas fa-graduation-cap', 'title' => 'Data Lulusan'],
+                    ];
+                    $isMasterActive = collect($masterData)->contains(fn($item) => request()->routeIs($item['route'] . '*'));
+                @endphp
+                <div x-data="{ open: {{ $isMasterActive ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" 
+                            class="w-full group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold uppercase tracking-[0.1em] text-slate-500 hover:bg-slate-800 hover:text-slate-300 transition-all duration-150">
+                        <span class="flex items-center">
+                            <i class="fas fa-database mr-3 h-4 w-4 text-slate-500 group-hover:text-indigo-400"></i>
+                            Data Master
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="space-y-1 pl-4">
+                        @foreach ($masterData as $module)
+                            @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
+                            <a href="{{ route($module['route']) }}"
+                               class="group flex items-center rounded-lg px-3 py-2 font-medium transition-all duration-150
+                                      {{ $isActive
+                                            ? 'bg-indigo-700/80 text-white shadow-md'
+                                            : 'text-slate-400 hover:bg-slate-800 hover:text-slate-50' }}">
+                                <i class="{{ $module['icon'] }} mr-3 h-3 w-3 flex-shrink-0 opacity-70 group-hover:text-indigo-400 transition-colors"></i>
+                                <span class="text-xs">{{ $module['title'] }}</span>
+                            </a>
+                        @endforeach
                     </div>
+                </div>
 
-                    {{-- MODUL ADMIN (Tanpa Nomor) --}}
-                    @php $modules = [
-                        ['route' => 'users.index', 'icon' => 'fas fa-users-cog', 'title' => 'Manajemen User'],
-                        ['route' => 'settings.edit', 'icon' => 'fas fa-cog', 'title' => 'Pengaturan Umum'],
-                    ]; @endphp
-                    @foreach ($modules as $module)
-                        @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
-                        <a href="{{ route($module['route']) }}"
-                        class="group flex items-center rounded-lg px-3 py-2.5 font-medium transition-all duration-150
-                                {{ $isActive
-                                        ? 'bg-purple-700 text-white shadow-lg ring-1 ring-purple-500/80'
-                                        : 'text-slate-300 hover:bg-slate-800 hover:text-slate-50 hover:shadow-sm' }}">
-                            <i class="{{ $module['icon'] }} mr-3 h-4 w-4 flex-shrink-0 text-slate-400 group-hover:text-purple-400 transition-colors"></i>
-                            <span>{{ $module['title'] }}</span>
-                        </a>
-                    @endforeach
+                {{-- 3. ARSIP & SURAT --}}
+                @php 
+                    $arsipModules = [
+                        ['route' => 'nomor-surat.index', 'icon' => 'fas fa-tags', 'title' => 'Klasifikasi Nomor Surat'],
+                        ['route' => 'buku-induk-arsip.index', 'icon' => 'fas fa-envelope-open-text', 'title' => 'Buku Induk Arsip'],
+                    ];
+                    $isArsipActive = collect($arsipModules)->contains(fn($item) => request()->routeIs($item['route'] . '*'));
+                @endphp
+                <div x-data="{ open: {{ $isArsipActive ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" 
+                            class="w-full group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold uppercase tracking-[0.1em] text-slate-500 hover:bg-slate-800 hover:text-slate-300 transition-all duration-150">
+                        <span class="flex items-center">
+                            <i class="fas fa-archive mr-3 h-4 w-4 text-slate-500 group-hover:text-indigo-400"></i>
+                            Arsip & Surat
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="space-y-1 pl-4">
+                        @foreach ($arsipModules as $module)
+                            @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
+                            <a href="{{ route($module['route']) }}"
+                               class="group flex items-center rounded-lg px-3 py-2 font-medium transition-all duration-150
+                                      {{ $isActive
+                                            ? 'bg-indigo-700/80 text-white shadow-md'
+                                            : 'text-slate-400 hover:bg-slate-800 hover:text-slate-50' }}">
+                                <i class="{{ $module['icon'] }} mr-3 h-3 w-3 flex-shrink-0 opacity-70 group-hover:text-indigo-400 transition-colors"></i>
+                                <span class="text-xs">{{ $module['title'] }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- 4. ADMINISTRASI --}}
+                @php 
+                    $adminModules = [
+                        ['route' => 'administrasi-guru.index', 'icon' => 'fas fa-file-alt', 'title' => 'Administrasi Guru'],
+                        ['route' => 'administrasi-siswa.index', 'icon' => 'fas fa-folder-open', 'title' => 'Administrasi Siswa'],
+                        ['route' => 'daftar-hadir.index', 'icon' => 'fas fa-calendar-check', 'title' => 'Generator Daftar Hadir'],
+                    ];
+                    $isAdminModuleActive = collect($adminModules)->contains(fn($item) => request()->routeIs($item['route'] . '*'));
+                @endphp
+                <div x-data="{ open: {{ $isAdminModuleActive ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" 
+                            class="w-full group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold uppercase tracking-[0.1em] text-slate-500 hover:bg-slate-800 hover:text-slate-300 transition-all duration-150">
+                        <span class="flex items-center">
+                            <i class="fas fa-file-signature mr-3 h-4 w-4 text-slate-500 group-hover:text-indigo-400"></i>
+                            Administrasi
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="space-y-1 pl-4">
+                        @foreach ($adminModules as $module)
+                            @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
+                            <a href="{{ route($module['route']) }}"
+                               class="group flex items-center rounded-lg px-3 py-2 font-medium transition-all duration-150
+                                      {{ $isActive
+                                            ? 'bg-indigo-700/80 text-white shadow-md'
+                                            : 'text-slate-400 hover:bg-slate-800 hover:text-slate-50' }}">
+                                <i class="{{ $module['icon'] }} mr-3 h-3 w-3 flex-shrink-0 opacity-70 group-hover:text-indigo-400 transition-colors"></i>
+                                <span class="text-xs">{{ $module['title'] }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- 5. INVENTARIS --}}
+                @php 
+                    $inventarisModules = [
+                        ['route' => 'sarpras.index', 'icon' => 'fas fa-building', 'title' => 'Database Sarpras'],
+                        ['route' => 'buku-perpus.index', 'icon' => 'fas fa-book-reader', 'title' => 'Database Perpustakaan'],
+                    ];
+                    $isInventarisActive = collect($inventarisModules)->contains(fn($item) => request()->routeIs($item['route'] . '*'));
+                @endphp
+                <div x-data="{ open: {{ $isInventarisActive ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" 
+                            class="w-full group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold uppercase tracking-[0.1em] text-slate-500 hover:bg-slate-800 hover:text-slate-300 transition-all duration-150">
+                        <span class="flex items-center">
+                            <i class="fas fa-boxes mr-3 h-4 w-4 text-slate-500 group-hover:text-indigo-400"></i>
+                            Inventaris
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="space-y-1 pl-4">
+                        @foreach ($inventarisModules as $module)
+                            @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
+                            <a href="{{ route($module['route']) }}"
+                               class="group flex items-center rounded-lg px-3 py-2 font-medium transition-all duration-150
+                                      {{ $isActive
+                                            ? 'bg-indigo-700/80 text-white shadow-md'
+                                            : 'text-slate-400 hover:bg-slate-800 hover:text-slate-50' }}">
+                                <i class="{{ $module['icon'] }} mr-3 h-3 w-3 flex-shrink-0 opacity-70 group-hover:text-indigo-400 transition-colors"></i>
+                                <span class="text-xs">{{ $module['title'] }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- 6. SISTEM --}}
+                @if(Auth::user()->isAdmin())
+                    @php 
+                        $systemModules = [
+                            ['route' => 'users.index', 'icon' => 'fas fa-users-cog', 'title' => 'Manajemen User'],
+                            ['route' => 'settings.edit', 'icon' => 'fas fa-cog', 'title' => 'Pengaturan Umum'],
+                        ];
+                        $isSystemActive = collect($systemModules)->contains(fn($item) => request()->routeIs($item['route'] . '*'));
+                    @endphp
+                    <div x-data="{ open: {{ $isSystemActive ? 'true' : 'false' }} }" class="space-y-1">
+                        <button @click="open = !open" 
+                                class="w-full group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold uppercase tracking-[0.1em] text-slate-500 hover:bg-slate-800 hover:text-slate-300 transition-all duration-150">
+                            <span class="flex items-center">
+                                <i class="fas fa-tools mr-3 h-4 w-4 text-slate-500 group-hover:text-purple-400"></i>
+                                Pengaturan
+                            </span>
+                            <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                        </button>
+                        <div x-show="open" x-collapse x-cloak class="space-y-1 pl-4">
+                            @foreach ($systemModules as $module)
+                                @php $isActive = request()->routeIs($module['route'] . '*'); @endphp
+                                <a href="{{ route($module['route']) }}"
+                                class="group flex items-center rounded-lg px-3 py-2 font-medium transition-all duration-150
+                                        {{ $isActive
+                                                ? 'bg-purple-700/80 text-white shadow-md'
+                                                : 'text-slate-400 hover:bg-slate-800 hover:text-slate-50' }}">
+                                    <i class="{{ $module['icon'] }} mr-3 h-3 w-3 flex-shrink-0 opacity-70 group-hover:text-purple-400 transition-colors"></i>
+                                    <span class="text-xs">{{ $module['title'] }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
                 @endif
 
                 {{-- Logout Link --}}
-                <div class="py-4">
+                <div class="py-4 border-t border-slate-800/50 mt-4">
                     <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
                         <a href="{{ route('logout') }}"

@@ -117,7 +117,7 @@
                 </div>
                 <div class="w-full sm:w-auto">
                     {{-- Menggunakan view pagination Tailwind --}}
-                    {{ $bukuPerpus->appends(request()->except('page'))->links('pagination::tailwind') }}
+                    {{ $bukuPerpus->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>

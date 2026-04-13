@@ -120,7 +120,7 @@
                 </div>
                 <div class="w-full sm:w-auto">
                     {{-- Menggunakan view pagination Tailwind --}}
-                    {{ $administrasi->appends(request()->except('page'))->links('pagination::tailwind') }}
+                    {{ $administrasi->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>
