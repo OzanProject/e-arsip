@@ -110,25 +110,32 @@ class SiswaImport implements
             }
 
             // Gunakan updateOrCreate untuk menghindari duplikasi dan memungkinkan update massal
-            Siswa::updateOrCreate(
-                ['nisn' => $row['nisn']], // Cari berdasarkan NISN
+            // Logika Smart Import: Pastikan kelas ada di Manajemen Kelas
+            $className = trim($row['kelas']);
+            $class = \App\Models\SchoolClass::firstOrCreate(
+                ['name' => $className],
+                ['slug' => \Illuminate\Support\Str::slug($className), 'angkatan' => date('Y') . '/' . (date('Y') + 1)]
+            );
+
+            \App\Models\Siswa::updateOrCreate(
+                ['nisn' => $row['nisn']],
                 [
-                    'nis'               => $row['nis'],
-                    'nama'              => $row['nama'],
-                    'jenis_kelamin'     => $row['jenis_kelamin'],
-                    'tempat_lahir'      => $row['tempat_lahir'],
-                    'tanggal_lahir'     => $tanggal_lahir_mysql, 
-                    'kelas'             => $row['kelas'],
-                    'agama'             => $row['agama'] ?? 'Islam',
-                    'kampung'           => $row['kampung'],
-                    'rt'                => $row['rt'],
-                    'rw'                => $row['rw'],
-                    'desa'              => $row['desa'],
-                    'kota'              => $row['kota'],
-                    'provinsi'          => $row['provinsi'],
-                    'nama_ayah'         => $row['nama_ayah'],
-                    'nama_ibu'          => $row['nama_ibu'],
-                    'telepon'           => $row['telepon'] ?? null,
+                    'nis'           => $row['nis'] ?? null,
+                    'nama'          => $row['nama'],
+                    'jenis_kelamin' => $row['jenis_kelamin'],
+                    'tempat_lahir'  => $row['tempat_lahir'],
+                    'tanggal_lahir' => $tanggal_lahir_mysql,
+                    'kelas'         => $class->name, // Menggunakan name dari model class yang sudah dipastikan ada
+                    'agama'         => $row['agama'],
+                    'nama_ayah'     => $row['nama_ayah'] ?? null,
+                    'nama_ibu'      => $row['nama_ibu'] ?? null,
+                    'telepon'       => $row['telepon'] ?? null,
+                    'kampung'       => $row['kampung'] ?? null,
+                    'rt'            => $row['rt'] ?? null,
+                    'rw'            => $row['rw'] ?? null,
+                    'desa'          => $row['desa'] ?? null,
+                    'kota'          => $row['kota'] ?? null,
+                    'provinsi'      => $row['provinsi'] ?? null,
                 ]
             );
         }
@@ -167,11 +174,11 @@ class SiswaImport implements
     public function customValidationMessages()
     {
         return [
-            'required' => 'Kolom :attribute wajib diisi.',
-            'unique'   => ':attribute sudah terdaftar di sistem.',
-            'in'       => 'Isian :attribute tidak valid.',
-            'max'      => 'Isian :attribute terlalu panjang (maksimal :max karakter).',
-            'string'   => 'Isian :attribute harus berupa teks.',
+            'required'      => 'Kolom :attribute wajib diisi.',
+            'unique'        => ':attribute sudah terdaftar di sistem.',
+            'in'            => 'Isian :attribute tidak valid.',
+            'max'           => 'Isian :attribute terlalu panjang (maksimal :max karakter).',
+            'string'        => 'Isian :attribute harus berupa teks.',
         ];
     }
 

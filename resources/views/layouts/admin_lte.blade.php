@@ -54,7 +54,7 @@
 
             {{-- 2c. KONTEN UTAMA --}}
             {{-- Tambahkan padding atas (pt-24) untuk memberi ruang yang cukup dari fixed header --}}
-            <main class="flex-grow pt-20 pb-6" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200"> 
+            <main class="flex-grow pt-20 pb-6"> 
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                     {{-- NOTIFIKASI (ALERT) DIGANTI SWEETALERT GLOBAL --}}

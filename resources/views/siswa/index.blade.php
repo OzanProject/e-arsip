@@ -85,10 +85,36 @@
                         </button>
                     </div>
 
-                    {{-- 2. Form Pencarian & Tombol Biasa (MUNCUL JIKA TIDAK ADA BULK ACTION) --}}
-                    <div x-show="selectedIds.length === 0" class="flex items-center space-x-3 w-full md:w-auto justify-end">
+                    {{-- 2. Form Pencarian & Filter & Tombol Biasa (MUNCUL JIKA TIDAK ADA BULK ACTION) --}}
+                    <div x-show="selectedIds.length === 0" class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto justify-end">
+                        
+                        {{-- FILTER KELAS --}}
+                        <div class="w-full sm:w-40">
+                            <form id="filterForm" action="{{ route('siswa.index') }}" method="GET">
+                                {{-- Pertahankan search & sorting saat filter kelas --}}
+                                @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                                @if(request('sort_by')) <input type="hidden" name="sort_by" value="{{ request('sort_by') }}"> @endif
+                                @if(request('sort_order')) <input type="hidden" name="sort_order" value="{{ request('sort_order') }}"> @endif
+                                
+                                <select name="kelas" onchange="this.form.submit()" 
+                                        class="form-select w-full text-sm rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm">
+                                    <option value="">Semua Kelas</option>
+                                    @foreach($classes as $classItem)
+                                        <option value="{{ $classItem }}" {{ request('kelas') == $classItem ? 'selected' : '' }}>
+                                            Kelas {{ $classItem }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </div>
+
                         {{-- SEARCH BAR --}}
                         <form action="{{ route('siswa.index') }}" method="GET" class="w-full sm:w-64">
+                            {{-- Pertahankan filter kelas & sorting saat searching --}}
+                            @if(request('kelas')) <input type="hidden" name="kelas" value="{{ request('kelas') }}"> @endif
+                            @if(request('sort_by')) <input type="hidden" name="sort_by" value="{{ request('sort_by') }}"> @endif
+                            @if(request('sort_order')) <input type="hidden" name="sort_order" value="{{ request('sort_order') }}"> @endif
+
                             <div class="relative flex items-center">
                                 <input type="text" name="search" class="form-input w-full py-2 pl-10 pr-4 text-sm rounded-lg border border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150" placeholder="Cari NISN, NIS, atau Nama" value="{{ request('search') }}">
                                 <i class="fas fa-search absolute left-3 text-slate-400"></i>
@@ -98,8 +124,8 @@
                         {{-- Dropdown Aksi (Import/Export) --}}
                         <div x-data="{ openAction: false }" class="relative">
                              <button @click="openAction = !openAction" type="button" class="btn-secondary flex items-center text-sm" title="Aksi Data">
-                                <i class="fas fa-file-export mr-2"></i> Aksi Data
-                                <i class="fas fa-angle-down ml-2 text-xs"></i>
+                                <i class="fas fa-file-export mr-2 text-indigo-500"></i> Aksi
+                                <i class="fas fa-angle-down ml-2 text-xs opacity-50"></i>
                              </button>
                              <div x-show="openAction" 
                                   @click.away="openAction = false"
@@ -110,22 +136,22 @@
                                          md:w-56 md:right-0 md:left-auto w-full left-0 right-0 mx-auto max-w-xs sm:max-w-sm">
                                  <div class="py-1" role="menu">
                                      <a href="#" @click="openImportModal = true; openAction = false" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-import mr-2"></i> Impor dari Excel
+                                         <i class="fas fa-file-import mr-2 text-indigo-500"></i> Impor dari Excel
                                      </a>
                                      <div class="border-t border-slate-100 my-1"></div>
                                      <a href="{{ route('siswa.export.excel') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-excel mr-2"></i> Ekspor ke Excel
+                                         <i class="fas fa-file-excel mr-2 text-green-600"></i> Ekspor ke Excel
                                      </a>
                                      <a href="{{ route('siswa.export.pdf') }}" target="_blank" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-pdf mr-2"></i> Ekspor ke PDF
+                                         <i class="fas fa-file-pdf mr-2 text-red-600"></i> Ekspor ke PDF
                                      </a>
                                  </div>
                              </div>
                         </div>
                         
                         {{-- Tombol Tambah --}}
-                        <a href="{{ route('siswa.create') }}" class="btn-primary w-full sm:w-auto text-sm">
-                            <i class="fas fa-plus mr-1"></i> Tambah Siswa
+                        <a href="{{ route('siswa.create') }}" class="btn-primary w-full sm:w-auto text-sm shrink-0">
+                            <i class="fas fa-plus mr-1"></i> Tambah
                         </a>
                     </div>
                 </div>
@@ -151,9 +177,39 @@
                                         }
                                     " :checked="selectedIds.length === {{ $siswa->count() }} && {{ $siswa->count() > 0 }}">
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">NISN/NIS</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama</th>
-                                <th class="px-6 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-20">Kelas</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'nisn', 'sort_order' => request('sort_by') == 'nisn' && request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" 
+                                       class="flex items-center hover:text-indigo-600 transition-all duration-200">
+                                        NISN/NIS
+                                        @if(request('sort_by') == 'nisn')
+                                            <i class="fas fa-sort-{{ request('sort_order', 'asc') == 'asc' ? 'up' : 'down' }} ml-1.5 text-indigo-500 transition-transform"></i>
+                                        @else
+                                            <i class="fas fa-sort ml-1.5 opacity-20 group-hover:opacity-50"></i>
+                                        @endif
+                                    </a>
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'nama', 'sort_order' => (request('sort_by', 'kelas') == 'nama' && request('sort_order', 'asc') == 'asc') ? 'desc' : 'asc']) }}" 
+                                       class="flex items-center hover:text-indigo-600 transition-all duration-200">
+                                        Nama
+                                        @if(request('sort_by', 'kelas') == 'nama')
+                                            <i class="fas fa-sort-{{ request('sort_order', 'asc') == 'asc' ? 'up' : 'down' }} ml-1.5 text-indigo-500 transition-transform"></i>
+                                        @else
+                                            <i class="fas fa-sort ml-1.5 opacity-20"></i>
+                                        @endif
+                                    </a>
+                                </th>
+                                <th class="px-6 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-20">
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'kelas', 'sort_order' => (request('sort_by', 'kelas') == 'kelas' && request('sort_order', 'asc') == 'asc') ? 'desc' : 'asc']) }}" 
+                                       class="flex items-center justify-center hover:text-indigo-600 transition-all duration-200">
+                                        Kelas
+                                        @if(request('sort_by', 'kelas') == 'kelas')
+                                            <i class="fas fa-sort-{{ request('sort_order', 'asc') == 'asc' ? 'up' : 'down' }} ml-1 text-indigo-500 transition-transform"></i>
+                                        @else
+                                            <i class="fas fa-sort ml-1 opacity-20"></i>
+                                        @endif
+                                    </a>
+                                </th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-32">Jenis Kelamin</th>
                                 <th class="px-6 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-36">Aksi</th>
                             </tr>
@@ -234,11 +290,15 @@
                     </div>
                 </div>
                 <div class="w-full sm:w-auto">
-                    {{ $siswa->appends(request()->except('page'))->onEachSide(1)->links('pagination::tailwind') }}
+                    {{ $siswa->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>
+        {{-- AKHIR CARD --}}
+
     </div>
+    {{-- AKHIR X-DATA OUTER --}}
+
 @endsection
 
 @push('scripts')

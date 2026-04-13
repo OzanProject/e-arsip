@@ -31,6 +31,11 @@ class SiswaController extends Controller
                 ->orWhere('nama', 'like', "%{$search}%");
         }
 
+        // Fitur Filter Kelas
+        if ($request->filled('kelas')) {
+            $query->where('kelas', $request->input('kelas'));
+        }
+
         // Default: Urutan Kelas (7, 8, 9) lalu Nama
         $sortBy = $request->input('sort_by', 'kelas');
         $sortOrder = $request->input('sort_order', 'asc');
@@ -42,16 +47,20 @@ class SiswaController extends Controller
                 ->orderBy('kelas', 'asc')
                 ->orderBy('nama', 'asc')
                 ->paginate($perPage)
+                ->onEachSide(1)
                 ->appends($request->except('page'));
         } else {
             $siswa = $query->orderBy($sortBy, $sortOrder)
                 ->paginate($perPage)
+                ->onEachSide(1)
                 ->appends($request->except('page'));
         }
 
+        // Ambil daftar kelas unik untuk filter
+        $classes = \App\Models\SchoolClass::orderBy('name')->pluck('name')->toArray();
         $totalData = \App\Models\Siswa::count();
 
-        return view('siswa.index', compact('siswa', 'sortBy', 'sortOrder', 'totalData'));
+        return view('siswa.index', compact('siswa', 'sortBy', 'sortOrder', 'totalData', 'classes'));
     }
 
     public function create()

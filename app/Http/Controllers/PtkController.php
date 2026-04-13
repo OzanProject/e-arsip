@@ -37,7 +37,7 @@ class PtkController extends Controller
         
         // Fitur per_page & Custom Limit
         $perPage = $request->input('per_page', 10);
-        $ptk = $query->orderBy($sortBy, $sortOrder)->paginate($perPage)->appends($request->except('page'));
+        $ptk = $query->orderBy($sortBy, $sortOrder)->paginate($perPage)->onEachSide(1)->appends($request->except('page'));
         
         $totalData = Ptk::count();
         

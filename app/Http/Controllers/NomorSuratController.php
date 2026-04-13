@@ -23,7 +23,7 @@ class NomorSuratController extends Controller
 
         $perPage = $request->input('per_page', 10);
         
-        $nomorSurats = $query->orderBy('created_at', 'desc')->paginate($perPage)->appends($request->except('page'));
+        $nomorSurats = $query->orderBy('created_at', 'desc')->paginate($perPage)->onEachSide(1)->appends($request->except('page'));
         
         $totalData = NomorSurat::count();
 

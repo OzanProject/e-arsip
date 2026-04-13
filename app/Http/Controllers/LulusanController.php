@@ -33,7 +33,7 @@ class LulusanController extends Controller
 
         // PERUBAHAN: Custom limit per_page
         $perPage = $request->input('per_page', 10);
-        $lulusan = $query->orderBy('created_at', 'desc')->paginate($perPage)->appends($request->except('page'));
+        $lulusan = $query->orderBy('created_at', 'desc')->paginate($perPage)->onEachSide(1)->appends($request->except('page'));
         
         $totalData = \App\Models\Lulusan::count();
         
