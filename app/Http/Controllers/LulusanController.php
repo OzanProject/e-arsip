@@ -22,7 +22,7 @@ class LulusanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = \App\Models\Lulusan::query();
+        $query = Lulusan::query();
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -35,7 +35,7 @@ class LulusanController extends Controller
         $perPage = $request->input('per_page', 10);
         $lulusan = $query->orderBy('created_at', 'desc')->paginate($perPage)->onEachSide(1)->appends($request->except('page'));
         
-        $totalData = \App\Models\Lulusan::count();
+        $totalData = Lulusan::count();
         
         return view('lulusan.index', compact('lulusan', 'totalData'));
     }
@@ -114,7 +114,7 @@ class LulusanController extends Controller
         }
 
         // Eksekusi penghapusan massal
-        $deletedCount = \App\Models\Lulusan::whereIn('id', $ids)->delete();
+        $deletedCount = Lulusan::whereIn('id', $ids)->delete();
 
         if ($deletedCount > 0) {
             return redirect()->route('lulusan.index')->with('success', "{$deletedCount} data lulusan berhasil dihapus.");

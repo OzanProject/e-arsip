@@ -49,43 +49,37 @@
     {{-- AKHIR MODAL --}}
 
     {{-- Page Header --}}
-    <div class="relative z-40 flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0" data-aos="fade-down">
-        <div>
+    <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div class="space-y-1">
             <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Buku Induk Arsip</h1>
-            <p class="text-slate-500 mt-1">Pusat data surat masuk dan keluar secara digital.</p>
+            <p class="text-slate-500 font-medium">Pusat data surat masuk dan keluar secara digital.</p>
         </div>
-        <div class="flex flex-wrap gap-2 md:gap-3 justify-start md:justify-end">
-            <button @click="openImportModal = true" class="inline-flex items-center px-4 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl shadow hover:bg-emerald-700 transition">
+        <div class="flex flex-wrap items-center gap-3">
+            <button @click="openImportModal = true" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-xl shadow-md hover:bg-emerald-700 transition">
                 <i class="fas fa-file-import mr-2"></i> Impor
             </button>
             <div class="relative" x-data="{ openExport: false }">
-                <button @click="openExport = !openExport" @click.away="openExport = false" class="inline-flex items-center px-4 py-2.5 bg-amber-500 text-white font-semibold rounded-xl shadow hover:bg-amber-600 transition">
-                    <i class="fas fa-print mr-2"></i> Ekspor <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                <button @click="openExport = !openExport" @click.away="openExport = false" class="inline-flex items-center px-4 py-2 bg-amber-500 text-white font-semibold rounded-xl shadow-md hover:bg-amber-600 transition">
+                    <i class="fas fa-file-export mr-2"></i> Ekspor
+                    <i class="fas fa-angle-down ml-2 text-xs opacity-70"></i>
                 </button>
-                <div x-show="openExport" x-cloak 
-                     x-transition:enter="transition ease-out duration-100"
-                     x-transition:enter-start="transform opacity-0 scale-95"
-                     x-transition:enter-end="transform opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-75"
-                     x-transition:leave-start="transform opacity-100 scale-100"
-                     x-transition:leave-end="transform opacity-0 scale-95"
-                     class="absolute left-0 md:left-auto md:right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl z-[100] border border-slate-100 overflow-hidden">
+                <div x-show="openExport" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl ring-1 ring-black/5 z-50 py-1 overflow-hidden border border-slate-100">
                     <a href="{{ route('buku-induk-arsip.export.excel') }}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-50 transition">
-                        <i class="fas fa-file-excel mr-3 text-emerald-600 text-lg"></i> MS. Excel
+                        <i class="fas fa-file-excel mr-3 text-emerald-600"></i> Excel
                     </a>
                     <a href="{{ route('buku-induk-arsip.export.pdf') }}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition">
-                        <i class="fas fa-file-pdf mr-3 text-rose-600 text-lg"></i> PDF
+                        <i class="fas fa-file-pdf mr-3 text-rose-600"></i> PDF
                     </a>
                 </div>
             </div>
-            <a href="{{ route('buku-induk-arsip.create') }}" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl shadow hover:bg-indigo-700 transition">
+            <a href="{{ route('buku-induk-arsip.create') }}" class="inline-flex items-center px-5 py-2 bg-indigo-600 text-white font-semibold rounded-xl shadow-md hover:bg-indigo-700 transition">
                 <i class="fas fa-plus mr-2"></i> Arsip Baru
             </a>
         </div>
     </div>
 
     {{-- Main Card --}}
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-indigo-600" data-aos="fade-up" data-aos-delay="100">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-indigo-600">
         
         {{-- Toolbar Section --}}
         <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">

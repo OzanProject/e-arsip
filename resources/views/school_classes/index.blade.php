@@ -7,17 +7,27 @@
 --}}
 
 @section('content')
-  <div class="space-y-6">
+    {{-- Page Header --}}
+    <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div class="space-y-1">
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Manajemen Kelas</h1>
+            <p class="text-slate-500 font-medium">Kelola data kelas, wali kelas, dan informasi angkatan.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ route('school-classes.create') }}" 
+               class="inline-flex items-center px-5 py-2 bg-indigo-600 text-white font-semibold rounded-xl shadow-md hover:bg-indigo-700 transition">
+                <i class="fas fa-plus mr-2"></i> Tambah Kelas Baru
+            </a>
+        </div>
+    </div>
+
+    <div class="space-y-6">
     <div class="bg-white rounded-xl shadow-lg border-t-4 border-indigo-600">
-      {{-- Header --}}
-      <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center bg-slate-50">
+      {{-- Card Header: Toolbar --}}
+      <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center bg-slate-50/50">
         <h3 class="text-xl font-bold text-slate-800 flex items-center">
-          <i class="fas fa-chalkboard mr-2 text-indigo-600"></i> Data Kelas Sekolah
+          <i class="fas fa-chalkboard mr-2 text-indigo-600"></i> Daftar Kelas
         </h3>
-        <a href="{{ route('school-classes.create') }}"
-          class="btn-primary text-sm shadow-md hover:shadow-lg transition-all">
-          <i class="fas fa-plus mr-1"></i> Tambah Kelas Baru
-        </a>
       </div>
 
       {{-- Table --}}

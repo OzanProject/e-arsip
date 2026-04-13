@@ -21,7 +21,7 @@ class SiswaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = \App\Models\Siswa::query();
+        $query = Siswa::query();
 
         // Fitur Pencarian (Sama seperti sebelumnya)
         if ($request->filled('search')) {
@@ -30,7 +30,6 @@ class SiswaController extends Controller
                 ->orWhere('nis', 'like', "%{$search}%")
                 ->orWhere('nama', 'like', "%{$search}%");
         }
-
         // Fitur Filter Kelas
         if ($request->filled('kelas')) {
             $query->where('kelas', $request->input('kelas'));
@@ -57,10 +56,10 @@ class SiswaController extends Controller
         }
 
         // Ambil daftar kelas unik untuk filter
-        $classes = \App\Models\SchoolClass::orderBy('name')->pluck('name')->toArray();
-        $totalData = \App\Models\Siswa::count();
+        $classList = SchoolClass::orderBy('name')->pluck('name')->toArray();
+        $totalData = Siswa::count();
 
-        return view('siswa.index', compact('siswa', 'sortBy', 'sortOrder', 'totalData', 'classes'));
+        return view('siswa.index', compact('siswa', 'sortBy', 'sortOrder', 'totalData', 'classList'));
     }
 
     public function create()
@@ -165,7 +164,7 @@ class SiswaController extends Controller
         }
 
         // Eksekusi penghapusan massal
-        $deletedCount = \App\Models\Siswa::whereIn('id', $ids)->delete();
+        $deletedCount = Siswa::whereIn('id', $ids)->delete();
 
         if ($deletedCount > 0) {
             return redirect()->route('siswa.index')->with('success', "{$deletedCount} data siswa berhasil dihapus.");

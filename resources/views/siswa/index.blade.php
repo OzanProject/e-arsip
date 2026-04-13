@@ -3,8 +3,49 @@
 @section('title', 'Daftar Siswa Aktif')
 
 @section('content')
+    {{-- @var array $classList --}}
     
-    {{-- MODAL UNTUK IMPOR EXCEL (Tailwind Modal - Membutuhkan Alpine.js) --}}
+    {{-- MODAL UNTUK IMPOR EXCEL --}}
+    {{-- Page Header --}}
+    <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div class="space-y-1">
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Data Siswa Aktif</h1>
+            <p class="text-slate-500 font-medium">Kelola data siswa aktif, informasi akademik, dan profil lengkap.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+            {{-- Dropdown Aksi (Import/Export) --}}
+            <div x-data="{ openAction: false }" class="relative">
+                 <button @click="openAction = !openAction" type="button" class="inline-flex items-center px-4 py-2 bg-white text-slate-700 font-semibold rounded-xl shadow-md border border-slate-200 hover:bg-slate-50 transition" title="Aksi Data">
+                    <i class="fas fa-file-export mr-2 text-indigo-500"></i> Aksi
+                    <i class="fas fa-angle-down ml-2 text-xs opacity-50"></i>
+                 </button>
+                 <div x-show="openAction" 
+                      @click.away="openAction = false"
+                      x-transition:enter="transition ease-out duration-100"
+                      x-transition:leave="transition ease-in duration-75"
+                      x-cloak
+                      class="absolute right-0 mt-2 rounded-xl shadow-xl bg-white ring-1 ring-black/5 z-50 w-56 overflow-hidden border border-slate-100">
+                     <div class="py-1" role="menu">
+                         <a href="#" @click="openImportModal = true; openAction = false" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-50 transition" role="menuitem">
+                             <i class="fas fa-file-import mr-3 text-indigo-500"></i> Impor dari Excel
+                         </a>
+                         <a href="{{ route('siswa.export.excel') }}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-50 transition" role="menuitem">
+                             <i class="fas fa-file-excel mr-3 text-green-600"></i> Ekspor ke Excel
+                         </a>
+                         <a href="{{ route('siswa.export.pdf') }}" target="_blank" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition" role="menuitem">
+                             <i class="fas fa-file-pdf mr-3 text-red-600"></i> Ekspor ke PDF
+                         </a>
+                     </div>
+                 </div>
+            </div>
+            
+            {{-- Tombol Tambah --}}
+            <a href="{{ route('siswa.create') }}" class="inline-flex items-center px-5 py-2 bg-indigo-600 text-white font-semibold rounded-xl shadow-md hover:bg-indigo-700 transition">
+                <i class="fas fa-plus mr-2"></i> Tambah Siswa
+            </a>
+        </div>
+    </div>
+
     <div x-data="{ openImportModal: false, selectedIds: [] }" class="space-y-6">
 
         {{-- Struktur Modal Tailwind --}}
@@ -53,16 +94,17 @@
         {{-- Card Utama Daftar Siswa --}}
         <div class="bg-white rounded-xl shadow-lg border-t-4 border-indigo-600">
             
-            {{-- Card Header: Judul, Search, Tombol Aksi, dan Tombol Bulk --}}
-            <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
+            {{-- Card Header: Search, Filter Kelas, dan Tombol Bulk --}}
+            <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50/50">
                 
-                <h3 class="text-xl font-bold text-slate-800 flex items-center">
-                    <i class="fas fa-user-graduate mr-2 text-indigo-600"></i> Data Siswa Aktif Sekolah
-                </h3>
+                <div class="flex items-center">
+                    <h3 class="text-lg font-bold text-slate-700 flex items-center">
+                        <i class="fas fa-list-ul mr-2 text-indigo-500"></i> Daftar Siswa
+                    </h3>
+                </div>
                 
-                {{-- Container Aksi & Search / BULK ACTIONS --}}
-                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full md:w-auto items-start md:items-center md:flex-row md:justify-end">
-
+                {{-- Container Search & Filter --}}
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
                     {{-- 1. BULK ACTIONS TOOLBAR --}}
                     <div x-show="selectedIds.length > 0" x-cloak 
                          x-transition:enter.duration.150ms x-transition:leave.duration.100ms
@@ -99,7 +141,7 @@
                                 <select name="kelas" onchange="this.form.submit()" 
                                         class="form-select w-full text-sm rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm">
                                     <option value="">Semua Kelas</option>
-                                    @foreach($classes as $classItem)
+                                    @foreach($classList as $classItem)
                                         <option value="{{ $classItem }}" {{ request('kelas') == $classItem ? 'selected' : '' }}>
                                             Kelas {{ $classItem }}
                                         </option>
@@ -116,43 +158,10 @@
                             @if(request('sort_order')) <input type="hidden" name="sort_order" value="{{ request('sort_order') }}"> @endif
 
                             <div class="relative flex items-center">
-                                <input type="text" name="search" class="form-input w-full py-2 pl-10 pr-4 text-sm rounded-lg border border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150" placeholder="Cari NISN, NIS, atau Nama" value="{{ request('search') }}">
+                                <input type="text" name="search" class="form-input w-full py-3 pl-10 pr-4 text-sm rounded-lg border border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150" placeholder="Cari NISN, NIS, atau Nama" value="{{ request('search') }}">
                                 <i class="fas fa-search absolute left-3 text-slate-400"></i>
                             </div>
                         </form>
-
-                        {{-- Dropdown Aksi (Import/Export) --}}
-                        <div x-data="{ openAction: false }" class="relative">
-                             <button @click="openAction = !openAction" type="button" class="btn-secondary flex items-center text-sm" title="Aksi Data">
-                                <i class="fas fa-file-export mr-2 text-indigo-500"></i> Aksi
-                                <i class="fas fa-angle-down ml-2 text-xs opacity-50"></i>
-                             </button>
-                             <div x-show="openAction" 
-                                  @click.away="openAction = false"
-                                  x-transition:enter="transition ease-out duration-100"
-                                  x-transition:leave="transition ease-in duration-75"
-                                  x-cloak
-                                  class="absolute mt-2 rounded-lg shadow-xl bg-white ring-1 ring-black/5 z-20 
-                                         md:w-56 md:right-0 md:left-auto w-full left-0 right-0 mx-auto max-w-xs sm:max-w-sm">
-                                 <div class="py-1" role="menu">
-                                     <a href="#" @click="openImportModal = true; openAction = false" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-import mr-2 text-indigo-500"></i> Impor dari Excel
-                                     </a>
-                                     <div class="border-t border-slate-100 my-1"></div>
-                                     <a href="{{ route('siswa.export.excel') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-excel mr-2 text-green-600"></i> Ekspor ke Excel
-                                     </a>
-                                     <a href="{{ route('siswa.export.pdf') }}" target="_blank" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700" role="menuitem">
-                                         <i class="fas fa-file-pdf mr-2 text-red-600"></i> Ekspor ke PDF
-                                     </a>
-                                 </div>
-                             </div>
-                        </div>
-                        
-                        {{-- Tombol Tambah --}}
-                        <a href="{{ route('siswa.create') }}" class="btn-primary w-full sm:w-auto text-sm shrink-0">
-                            <i class="fas fa-plus mr-1"></i> Tambah
-                        </a>
                     </div>
                 </div>
             </div> {{-- Akhir Card Header --}}

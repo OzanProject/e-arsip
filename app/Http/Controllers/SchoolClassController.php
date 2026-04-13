@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SchoolClass;
 use App\Models\Ptk;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -89,7 +90,7 @@ class SchoolClassController extends Controller
   public function destroy(SchoolClass $schoolClass)
   {
     // Check if class has students relative to Siswa model (based on class string)
-    $studentCount = \App\Models\Siswa::where('kelas', $schoolClass->name)->count();
+    $studentCount = Siswa::where('kelas', $schoolClass->name)->count();
 
     if ($studentCount > 0) {
       return redirect()->route('school-classes.index')

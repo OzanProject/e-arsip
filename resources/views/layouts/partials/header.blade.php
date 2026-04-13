@@ -14,10 +14,17 @@
                     <i class="fas fa-bars text-lg"></i>
                 </button>
 
-                {{-- Judul Halaman (sekunder - dipertahankan untuk referensi) --}}
-                <span class="hidden text-base font-semibold tracking-tight text-slate-800 sm:inline">
-                    @yield('title', 'Dashboard')
-                </span>
+                {{-- Judul Halaman (Breadcrumbs Style) --}}
+                <div class="hidden items-center space-x-2 text-sm font-medium sm:flex">
+                    <a href="{{ route('dashboard') }}" class="flex items-center text-slate-400 hover:text-indigo-600 transition">
+                        <i class="fas fa-home mr-2 text-xs"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <i class="fas fa-angle-right text-[10px] text-slate-300"></i>
+                    <span class="text-slate-800">
+                        @yield('title', 'Beranda')
+                    </span>
+                </div>
             </div>
 
             {{-- BAGIAN KANAN (User Menu & Actions) --}}

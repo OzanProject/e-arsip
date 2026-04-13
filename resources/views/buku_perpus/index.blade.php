@@ -3,20 +3,33 @@
 @section('title', 'Database Perpustakaan')
 
 @section('content')
+    {{-- Page Header --}}
+    <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div class="space-y-1">
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Koleksi Perpustakaan</h1>
+            <p class="text-slate-500 font-medium">Database lengkap koleksi buku, literatur, dan bahan pustaka sekolah.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+             <a href="{{ route('buku-perpus.create') }}" class="inline-flex items-center px-5 py-2 bg-teal-600 text-white font-semibold rounded-xl shadow-md hover:bg-teal-700 transition">
+                <i class="fas fa-plus mr-2"></i> Tambah Buku
+            </a>
+        </div>
+    </div>
+
     <div class="space-y-6">
         
         {{-- Card Utama --}}
         <div class="bg-white rounded-xl shadow-lg border-t-4 border-teal-600">
             
-            {{-- Card Header: Judul, Search, dan Tombol Aksi --}}
-            <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
+            {{-- Toolbar Section --}}
+            <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50/50">
                 
                 <h3 class="text-xl font-bold text-slate-800 flex items-center">
-                    <i class="fas fa-book-reader mr-2 text-teal-600"></i> Koleksi Buku Perpustakaan
+                    <i class="fas fa-book-reader mr-2 text-teal-600"></i> Daftar Koleksi
                 </h3>
                 
-                {{-- Container Aksi & Search --}}
-                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full md:w-auto items-start sm:items-center">
+                {{-- Container Search --}}
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
 
                     {{-- 1. SEARCH BAR (Tailwind) --}}
                     <form action="{{ route('buku-perpus.index') }}" method="GET" class="w-full sm:w-96">

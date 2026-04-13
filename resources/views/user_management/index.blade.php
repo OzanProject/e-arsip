@@ -6,14 +6,14 @@
 <div class="space-y-6">
 
     {{-- Page Header --}}
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0" data-aos="fade-down">
-        <div>
+    <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div class="space-y-1">
             <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Manajemen Pengguna</h1>
-            <p class="text-slate-500 mt-1">Kelola data pengguna, peran, dan hak akses sistem.</p>
+            <p class="text-slate-500 font-medium">Kelola data pengguna, peran, dan hak akses sistem.</p>
         </div>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap items-center gap-3">
             @if (Auth::user()->isAdmin())
-            <a href="{{ route('users.create') }}" class="inline-flex items-center px-5 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:bg-indigo-700 hover:shadow-indigo-500/30 transition-all transform hover:scale-105">
+            <a href="{{ route('users.create') }}" class="inline-flex items-center px-5 py-2 bg-indigo-600 text-white font-semibold rounded-xl shadow-md hover:bg-indigo-700 transition">
                 <i class="fas fa-user-plus mr-2"></i> Tambah Pengguna
             </a>
             @endif
@@ -21,7 +21,7 @@
     </div>
 
     {{-- Main Card --}}
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-indigo-600" data-aos="fade-up" data-aos-delay="100">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-indigo-600">
         
         {{-- Toolbar Section --}}
         <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">

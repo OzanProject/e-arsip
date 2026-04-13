@@ -37,7 +37,7 @@
     </a>
 
     {{-- Container Navigasi & User Panel --}}
-    <div class="flex-grow overflow-y-auto px-4 pt-5 pb-6">
+    <div class="flex-grow overflow-y-auto px-4 pt-8 pb-6">
         <div class="flex flex-col gap-4">
 
             {{-- 3. FORM PENCARIAN --}}

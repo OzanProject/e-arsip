@@ -3,7 +3,36 @@
 @section('title', 'Daftar Lulusan')
 
 @section('content')
-    
+    {{-- Page Header --}}
+    <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div class="space-y-1">
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Data Lulusan</h1>
+            <p class="text-slate-500 font-medium">Manajemen data alumni dan informasi kelulusan siswa.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+             <button @click="openImportModal = true" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-xl shadow-md hover:bg-emerald-700 transition">
+                <i class="fas fa-file-import mr-2"></i> Impor
+            </button>
+            <div class="relative" x-data="{ openExport: false }">
+                <button @click="openExport = !openExport" @click.away="openExport = false" class="inline-flex items-center px-4 py-2 bg-amber-500 text-white font-semibold rounded-xl shadow-md hover:bg-amber-600 transition">
+                    <i class="fas fa-file-export mr-2"></i> Ekspor
+                    <i class="fas fa-angle-down ml-2 text-xs opacity-70"></i>
+                </button>
+                <div x-show="openExport" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl ring-1 ring-black/5 z-50 py-1 overflow-hidden border border-slate-100">
+                    <a href="{{ route('lulusan.export.excel') }}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-50 transition">
+                        <i class="fas fa-file-excel mr-3 text-emerald-600"></i> Excel
+                    </a>
+                    <a href="{{ route('lulusan.export.pdf') }}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition">
+                        <i class="fas fa-file-pdf mr-3 text-rose-600"></i> PDF
+                    </a>
+                </div>
+            </div>
+            <a href="{{ route('lulusan.create') }}" class="inline-flex items-center px-5 py-2 bg-indigo-600 text-white font-semibold rounded-xl shadow-md hover:bg-indigo-700 transition">
+                <i class="fas fa-plus mr-2"></i> Tambah Lulusan
+            </a>
+        </div>
+    </div>
+
     {{-- Membungkus seluruh konten dengan x-data Alpine.js untuk state management --}}
     <div x-data="{ openImportModal: false, selectedIds: [] }" class="space-y-6">
 
@@ -53,11 +82,11 @@
         {{-- Card Utama Daftar Lulusan --}}
         <div class="bg-white rounded-xl shadow-lg border-t-4 border-indigo-600">
             
-            {{-- Card Header: Judul, Search, Tombol Aksi, dan Tombol Bulk --}}
-            <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
+            {{-- Toolbar Section --}}
+            <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50/50">
                 
                 <h3 class="text-xl font-bold text-slate-800 flex items-center">
-                    <i class="fas fa-graduation-cap mr-2 text-indigo-600"></i> Data Lulusan Sekolah
+                    <i class="fas fa-graduation-cap mr-2 text-indigo-600"></i> Daftar Lulusan
                 </h3>
                 
                 {{-- Container Aksi & Search / BULK ACTIONS --}}
